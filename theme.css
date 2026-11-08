@@ -271,3 +271,16 @@ body:before{display:none!important;background:none!important;content:none!import
 @media(max-width:560px){
  .home-stamp{display:flex}
 }
+
+
+/* Restore the original layered purple backdrop — without the dot texture */
+html,body{background-color:#c8bdff}
+body{
+ background:
+  radial-gradient(ellipse at 12% 8%,rgba(255,255,255,.62) 0,transparent 29%),
+  radial-gradient(ellipse at 95% 40%,rgba(116,91,226,.20) 0,transparent 32%),
+  radial-gradient(ellipse at 52% 110%,rgba(255,255,255,.30) 0,transparent 42%),
+  linear-gradient(135deg,#cfc5ff 0%,#bdb0ff 58%,#ad9df4 100%);
+ background-attachment:fixed;
+}
+body:before{display:none!important;content:none!important;background:none!important}
