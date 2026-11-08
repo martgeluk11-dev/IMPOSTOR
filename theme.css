@@ -284,3 +284,103 @@ body{
  background-attachment:fixed;
 }
 body:before{display:none!important;content:none!important;background:none!important}
+
+
+/* POPPY pass — saturated accents, playful depth, same layered backdrop */
+:root{
+ --paper:#c8bdff;--paper-deep:#b5a6ff;--white:#fffaff;--ink:#211344;--muted:#66558e;
+ --line:#d8ceff;--line-dark:#b6a5f4;--coral:#ff547f;--coral-pale:#ffe2ed;
+ --blue:#6540f5;--blue-pale:#e9e1ff;--green:#20b985;--green-pale:#d9fff0;
+ --yellow:#ffdf45;--danger:#e83f69;
+}
+html,body{color:#211344}
+.app{isolation:isolate}
+.top{border-bottom:1px solid rgba(65,38,145,.22)}
+.brand-mark{background:#ffdf45;border:2px solid #211344;box-shadow:0 4px 0 #211344;transform:rotate(-9deg)}
+.brand{color:#211344}
+.pill{color:#55418f}
+.pill:before{background:#ff547f;box-shadow:0 0 0 3px rgba(255,84,127,.15)}
+.pill[data-state="connected"]:before{background:#20b985;box-shadow:0 0 0 3px rgba(32,185,133,.16)}
+.eyebrow,#home .eyebrow{color:#6138ed}
+.home-intro h1{color:#211344;text-shadow:0 3px 0 rgba(255,255,255,.24)}
+.home-intro h1 em{color:#ff477d}
+.home-intro p{color:#4f407c}
+.home-meta{border-color:rgba(65,38,145,.24)}
+.home-meta span{color:#5d4a91;border-color:rgba(65,38,145,.28)}
+.home-stamp{color:#ff477d;border:2px solid #ff477d;background:rgba(255,255,255,.22);box-shadow:0 5px 0 rgba(255,71,125,.13)}
+.home-menu{border:2px solid #211344;background:rgba(255,255,255,.42);box-shadow:7px 8px 0 rgba(65,38,145,.13);padding:0 15px}
+.menu-heading,.menu-foot{color:#655493}
+.menu-action{border-color:rgba(65,38,145,.18)}
+.menu-action:hover{background:#fff0f6;padding-left:12px;padding-right:12px}
+.menu-index{color:#806db7}
+.action-copy strong{color:#211344}
+.action-copy small{color:#66558e}
+.action-arrow{color:#765fe0}
+.quick-action .menu-index,.quick-action .action-copy strong{color:#ff477d}
+.quick-action{background:rgba(255,225,69,.18)}
+.menu-action:hover .action-arrow{color:#ff477d}
+.page-top{border-color:rgba(65,38,145,.22)}
+.back-link{color:#5e4b92}
+.page-heading .eyebrow,.lobby-invite .eyebrow{color:#6138ed}
+.section-title{color:#211344}
+.sub{color:#66558e}
+.code-button{background:#6540f5;box-shadow:0 4px 0 #39209e}
+.code-button:hover{background:#ff547f;box-shadow:0 4px 0 #b82e58}
+.server-toolbar{border-color:rgba(65,38,145,.22)}
+.server-filter{color:#6138ed}
+.empty-servers{border:1px dashed rgba(65,38,145,.28);border-radius:16px;background:rgba(255,255,255,.27);margin-top:14px}
+.empty-icon{color:#ff547f}
+.empty-servers strong{color:#211344}
+.empty-servers span,.notice{color:#66558e}
+.panel{background:rgba(255,250,255,.88);border:1px solid rgba(255,255,255,.8);border-radius:16px;box-shadow:0 9px 0 rgba(74,48,151,.12)}
+.setup-panel{background:transparent;border:0;box-shadow:none}
+.setup-form{border-color:rgba(65,38,145,.28)}
+.field label{color:#5e4b92}
+.field input,.field select{background:#fffaff;border:1.5px solid #c9bcf8;border-radius:10px;color:#211344}
+.field input:focus,.field select:focus{border-color:#6540f5;box-shadow:0 0 0 3px rgba(101,64,245,.13)}
+.field select{background-image:linear-gradient(45deg,transparent 50%,#6540f5 50%),linear-gradient(135deg,#6540f5 50%,transparent 50%)}
+.visibility-options .visibility{border:1.5px solid #c9bcf8;border-radius:11px;background:rgba(255,255,255,.42)}
+.visibility-options .visibility.active{border-color:#6540f5;background:#e9e1ff;color:#4a2bc2;box-shadow:0 3px 0 rgba(101,64,245,.18)}
+.setup-summary{background:rgba(255,255,255,.35);border:1px solid rgba(65,38,145,.16);border-radius:10px;padding:13px}
+.btn{border-radius:10px}
+.btn.primary{background:#ff547f;border:1.5px solid #ff547f;box-shadow:0 4px 0 #b82e58;color:white}
+.btn.primary:hover{background:#f63870;border-color:#f63870;box-shadow:0 2px 0 #b82e58;transform:translateY(2px)}
+.btn.secondary{background:#fffaff;border:1.5px solid #c9bcf8;color:#34205f;box-shadow:0 3px 0 rgba(75,48,151,.12)}
+.btn.secondary:hover{background:#e9e1ff;border-color:#a995f4}
+.btn.ghost{color:#66558e}
+.lobby-layout{gap:28px}
+.players-heading{border-color:rgba(65,38,145,.18)}
+.players-heading strong{color:#211344}
+.player{background:rgba(255,255,255,.40);border:1px solid rgba(255,255,255,.65);border-radius:12px;padding:10px;margin:7px 0;box-shadow:0 3px 0 rgba(75,48,151,.08)}
+.avatar{background:#ffe0ec;color:#e83f78;border:1px solid rgba(255,84,127,.18)}
+.tag{border-radius:20px;background:#eee8ff;color:#6540c8}
+.tag.ready{background:#d9fff0;color:#16845f}
+.tag.host{background:#ffe4ed;color:#d9366c}
+.lobby-invite{border-color:rgba(65,38,145,.22)}
+.lobby-settings{border-color:rgba(65,38,145,.18)}
+.room-code{color:#211344;border-color:rgba(65,38,145,.18)}
+.ready-action{background:#e9e1ff!important;border-color:#c8b9ff!important;color:#5130d2!important;box-shadow:0 3px 0 rgba(101,64,245,.14)!important}
+.round{color:#6540f5}
+.timer{color:#211344;border-color:#ff547f}
+.progress{height:6px;background:#ded3ff;border-radius:10px;overflow:hidden}
+.progress>div{background:linear-gradient(90deg,#6540f5,#ff547f);border-radius:10px}
+.secret{border-radius:12px;border-left:4px solid #20b985;background:#d9fff0;padding:16px 0}
+.secret.impostor{background:#ffe2ed;border-left-color:#ff547f}
+#game .panel,#vote .panel,#judge .panel,#guess .panel{background:rgba(255,250,255,.92);border:1px solid rgba(255,255,255,.85);border-radius:16px;box-shadow:0 8px 0 rgba(74,48,151,.12)}
+.hint-list{border-color:rgba(65,38,145,.16);gap:9px}
+.hint-card{border:1px solid #e3d9ff;border-radius:10px;background:#fffaff;padding:13px}
+.hint-card .who{color:#765fa9}
+.hint-card .hint{color:#211344}
+.vote-option{border:1.5px solid #e0d5ff;border-radius:11px;background:#fffaff;margin:5px 0;padding:12px}
+.vote-option:hover{background:#fff0f6;border-color:#ff9ab8}
+.vote-option.selected{background:#e9e1ff;border-color:#6540f5;box-shadow:0 3px 0 rgba(101,64,245,.16)}
+.result{background:rgba(255,250,255,.92);border:1px solid white;border-radius:18px;box-shadow:0 9px 0 rgba(74,48,151,.12)}
+.result h2{color:#211344}
+.result .room-code{color:#6540f5}
+.error{color:#e83f69}
+.footer{color:#66558e}
+@media(max-width:560px){
+ .home-menu{padding:0 11px;box-shadow:4px 5px 0 rgba(65,38,145,.12)}
+ .player{padding:9px}
+ .panel{padding:19px}
+}
