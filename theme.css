@@ -159,3 +159,12 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 }
 @media(max-width:370px){.brand span{display:none}.settings-grid{grid-template-columns:1fr}.hint-list{grid-template-columns:1fr}.home-meta span{font-size:6px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* Small finishing details */
+.pill:before{content:"";display:inline-block;width:7px;height:7px;flex:none;border-radius:50%;background:#a9a49d;margin-right:1px}
+.pill[data-state="connected"]:before{background:#478768}
+.home-stamp{font-family:'Space Grotesk';border-style:dashed}
+.menu-heading span:last-child{font-variant-numeric:tabular-nums}
+#joinCode{text-transform:uppercase;letter-spacing:4px;font:700 22px 'Space Grotesk'}
+#home .menu-action:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+@media(max-width:560px){.home-stamp{display:none}}
