@@ -22,7 +22,6 @@ alter table public.impostor_profiles enable row level security;
 create or replace function public.impostor_my_profile()
 returns jsonb
 language plpgsql
-stable
 security definer
 set search_path=public
 as $
