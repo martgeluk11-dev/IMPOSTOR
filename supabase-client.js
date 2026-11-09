@@ -14,6 +14,30 @@
   let currentState = null;
   let lastSnapshotSignature = null;
   let myReady = false;
+  let heartbeatTimer = null;
+  let heartbeatBusy = false;
+
+  async function heartbeat() {
+    if (!roomId || document.visibilityState !== "visible" || heartbeatBusy) return;
+    heartbeatBusy = true;
+    try {
+      await rpc("impostor_heartbeat", { p_room_id: roomId });
+    } catch (e) {
+      console.warn("Presence heartbeat:", e.message || e);
+    } finally {
+      heartbeatBusy = false;
+    }
+  }
+
+  function startHeartbeat() {
+    if (heartbeatTimer) clearInterval(heartbeatTimer);
+    heartbeat();
+    heartbeatTimer = setInterval(heartbeat, 15000);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") heartbeat();
+  });
 
   async function ensureAuth() {
     const { data: { session }, error: sessionError } = await db.auth.getSession();
@@ -137,6 +161,7 @@
   async function enterRoom(payload) {
     applySnapshot(payload);
     subscribeRoom();
+    startHeartbeat();
     setConnection("CONNECTED");
     $("joinBtn").disabled = false;
   }
@@ -263,6 +288,7 @@
     try { if (roomId) await rpc("impostor_leave_room", { p_room_id: roomId }); }
     catch (e) { console.warn(e); }
     if (roomPoll) clearInterval(roomPoll);
+    if (heartbeatTimer) clearInterval(heartbeatTimer);
     location.reload();
   }
 
