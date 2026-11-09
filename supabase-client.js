@@ -43,7 +43,7 @@
     try {
       const profile = await rpc("impostor_my_profile");
       const stats = $("profileStats");
-      if (stats) stats.innerHTML = '<span>🪙 ' + Number(profile.coins || 0).toLocaleString() + '</span><span>LVL ' + Number(profile.level || 1) + '</span>';
+      if (stats) stats.innerHTML = '<span>🪙 ' + Number(profile.coins || 0).toLocaleString() + '</span><span>LVL ' + Number(profile.level || 1) + '</span><span>' + Number(profile.xp || 0).toLocaleString() + ' XP</span>';
     } catch (e) {
       console.warn("Could not load player profile:", e.message || e);
     }
@@ -81,7 +81,7 @@
     const me = (playerList || []).find(p => p.id === playerId);
     if (!me) return;
     const stats = $("profileStats");
-    if (stats) stats.innerHTML = '<span>🪙 ' + Number(me.coins || 0).toLocaleString() + '</span><span>LVL ' + Number(me.level || 1) + '</span>';
+    if (stats) stats.innerHTML = '<span>🪙 ' + Number(me.coins || 0).toLocaleString() + '</span><span>LVL ' + Number(me.level || 1) + '</span><span>' + Number(me.xp || 0).toLocaleString() + ' XP</span>';
     if (lastKnownLevel !== null && Number(me.level || 1) > lastKnownLevel) {
       const summary = $("rewardSummary");
       if (summary) summary.dataset.levelup = "true";
