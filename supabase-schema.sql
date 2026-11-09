@@ -173,3 +173,164 @@ do $$ begin
 exception when duplicate_object then null; when others then
  if sqlerrm not like '%already member%' then raise; end if;
 end $$;
+
+
+create or replace function public.impostor_start_game(p_room_id uuid)
+returns jsonb language plpgsql security definer set search_path=public
+as $$
+declare r public.impostor_rooms; uid uuid:=auth.uid(); ids uuid[]; words text[]:=array['Pizza','Volcano','Minecraft','Dolphin','Airplane','Popcorn','Guitar','Shark','Rainbow','Toothbrush','Basketball','Astronaut','Chocolate','Snowman','Headphones','Rollercoaster','Penguin','Smartphone','Watermelon','Skateboard','Castle','YouTube','Umbrella','Dragon','Pancake','Robot','Tornado','Football','Camera','Ghost','Sunglasses','Submarine','Sushi','Cactus','Dinosaur','Keyboard','Camping','Ice cream','Helicopter','Mermaid']; cats text[]:=array['Food','Nature','Games','Animals','Transport','Food','Music','Animals','Nature','Everyday','Sports','People','Food','Nature','Technology','Places','Animals','Technology','Food','Sports','Places','Internet','Everyday','Fantasy','Food','Technology','Nature','Sports','Technology','Fantasy','Everyday','Transport','Food','Nature','Animals','Technology','Places','Food','Transport','Fantasy']; n int; i int; hints_json jsonb:='{}'::jsonb;
+begin
+ select * into r from public.impostor_rooms where id=p_room_id for update;
+ if not found or r.host_id<>uid then raise exception 'Only the host can start'; end if;
+ select array_agg(user_id order by joined_at) into ids from public.impostor_players where room_id=p_room_id;
+ if coalesce(array_length(ids,1),0)<2 then raise exception 'At least two players are required'; end if;
+ if exists(select 1 from public.impostor_players where room_id=p_room_id and not is_ready) then raise exception 'Everyone must be ready'; end if;
+ n:=1+floor(random()*array_length(words,1))::int;
+ foreach i in array generate_series(1,array_length(ids,1)) loop
+   hints_json:=jsonb_set(hints_json,array[ids[i]::text],(select jsonb_agg('null'::jsonb) from generate_series(1,r.total_rounds)),true);
+ end loop;
+ update public.impostor_rooms set status='playing',game_state=jsonb_build_object('phase','hints','round',1,'word',words[n],'category',cats[n],'impostor',ids[1+floor(random()*array_length(ids,1))::int]::text,'hints',hints_json,'votes','{}'::jsonb,'deadline',now()+interval '60 seconds','judgeId',null,'tied','[]'::jsonb,'result',null),updated_at=now() where id=p_room_id;
+ update public.impostor_players set is_ready=false where room_id=p_room_id;
+ return public.impostor_snapshot(p_room_id);
+end $$;
+
+create or replace function public.impostor_submit_hint(p_room_id uuid,p_hint text)
+returns jsonb language plpgsql security definer set search_path=public
+as $$
+declare r public.impostor_rooms; gs jsonb; uid uuid:=auth.uid(); clean text; round_no int; all_done boolean;
+begin
+ select * into r from public.impostor_rooms where id=p_room_id for update;
+ if not found or not public.impostor_is_member(p_room_id) then raise exception 'Room not found'; end if;
+ gs:=r.game_state; round_no:=(gs->>'round')::int; clean:=left(trim(coalesce(p_hint,'')),20);
+ if gs->>'phase'<>'hints' or clean='' then raise exception 'Hints are not being accepted'; end if;
+ if coalesce(gs->'hints'->(uid::text)->(round_no-1),'null'::jsonb)<>'null'::jsonb then raise exception 'You already submitted a hint'; end if;
+ gs:=jsonb_set(gs,array['hints',uid::text,(round_no-1)::text],to_jsonb(clean),true);
+ select not exists(select 1 from public.impostor_players p where p.room_id=p_room_id and coalesce(gs->'hints'->(p.user_id::text)->(round_no-1),'null'::jsonb)='null'::jsonb) into all_done;
+ if all_done then
+   if round_no<(gs->>'round')::int + (r.total_rounds-round_no) then null; end if;
+   if round_no<r.total_rounds then gs:=jsonb_set(gs,'{round}',to_jsonb(round_no+1),true); gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '60 seconds'),true);
+   else gs:=jsonb_set(gs,'{phase}','"vote"'::jsonb,true); gs:=jsonb_set(gs,'{deadline}','null'::jsonb,true); end if;
+ end if;
+ update public.impostor_rooms set game_state=gs,updated_at=now() where id=p_room_id;
+ return public.impostor_snapshot(p_room_id);
+end $$;
+
+create or replace function public.impostor_advance_timeout(p_room_id uuid)
+returns jsonb language plpgsql security definer set search_path=public
+as $$
+declare r public.impostor_rooms; gs jsonb; round_no int;
+begin
+ select * into r from public.impostor_rooms where id=p_room_id for update;
+ if not found or r.host_id<>auth.uid() then raise exception 'Only the host can advance the timer'; end if;
+ gs:=r.game_state; round_no:=(gs->>'round')::int;
+ if gs->>'phase'<>'hints' or (gs->>'deadline')::timestamptz>now() then return public.impostor_snapshot(p_room_id); end if;
+ if round_no<r.total_rounds then gs:=jsonb_set(gs,'{round}',to_jsonb(round_no+1),true); gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '60 seconds'),true);
+ else gs:=jsonb_set(gs,'{phase}','"vote"'::jsonb,true); gs:=jsonb_set(gs,'{deadline}','null'::jsonb,true); end if;
+ update public.impostor_rooms set game_state=gs,updated_at=now() where id=p_room_id;
+ return public.impostor_snapshot(p_room_id);
+end $$;
+
+create or replace function public.impostor_submit_vote(p_room_id uuid,p_target uuid)
+returns jsonb language plpgsql security definer set search_path=public
+as $$
+declare r public.impostor_rooms; gs jsonb; uid uuid:=auth.uid(); votes jsonb; total_players int; max_votes int; tied_ids jsonb; winner_id uuid; judge_id uuid;
+begin
+ select * into r from public.impostor_rooms where id=p_room_id for update;
+ if not found or not public.impostor_is_member(p_room_id) then raise exception 'Room not found'; end if;
+ gs:=r.game_state;
+ if gs->>'phase'<>'vote' or p_target=uid or not exists(select 1 from public.impostor_players where room_id=p_room_id and user_id=p_target) then raise exception 'Invalid vote'; end if;
+ votes:=coalesce(gs->'votes','{}'::jsonb);
+ if votes ? uid::text then raise exception 'You already voted'; end if;
+ votes:=jsonb_set(votes,array[uid::text],to_jsonb(p_target::text),true); gs:=jsonb_set(gs,'{votes}',votes,true);
+ select count(*) into total_players from public.impostor_players where room_id=p_room_id;
+ if jsonb_object_length(votes)=total_players then
+   select max(cnt) into max_votes from (select count(*) cnt from jsonb_each_text(votes) group by value) q;
+   select jsonb_agg(value::uuid) into tied_ids from (select value from jsonb_each_text(votes) group by value having count(*)=max_votes) q;
+   if jsonb_array_length(tied_ids)>1 then
+     select user_id into judge_id from public.impostor_players where room_id=p_room_id and user_id::text<>gs->>'impostor' order by joined_at limit 1;
+     gs:=jsonb_set(gs,'{phase}','"judge"'::jsonb,true); gs:=jsonb_set(gs,'{tied}',tied_ids,true); gs:=jsonb_set(gs,'{judgeId}',to_jsonb(judge_id::text),true);
+   else
+     winner_id:=(tied_ids->>0)::uuid;
+     if winner_id::text=gs->>'impostor' then gs:=jsonb_set(gs,'{phase}','"guess"'::jsonb,true);
+     else gs:=jsonb_set(gs,'{phase}','"results"'::jsonb,true); gs:=jsonb_set(gs,'{result}',jsonb_build_object('winner','impostor','detail','An innocent player was voted out.','word',gs->>'word','impostor',gs->>'impostor'),true); update public.impostor_rooms set status='finished' where id=p_room_id; end if;
+   end if;
+ end if;
+ update public.impostor_rooms set game_state=gs,updated_at=now() where id=p_room_id;
+ return public.impostor_snapshot(p_room_id);
+end $$;
+
+create or replace function public.impostor_judge_vote(p_room_id uuid,p_target uuid)
+returns jsonb language plpgsql security definer set search_path=public
+as $$
+declare r public.impostor_rooms; gs jsonb;
+begin
+ select * into r from public.impostor_rooms where id=p_room_id for update;
+ if not found then raise exception 'Room not found'; end if;
+ gs:=r.game_state;
+ if gs->>'phase'<>'judge' or gs->>'judgeId'<>auth.uid()::text or not (gs->'tied' ? p_target::text) then raise exception 'You cannot make this decision'; end if;
+ if p_target::text=gs->>'impostor' then gs:=jsonb_set(gs,'{phase}','"guess"'::jsonb,true);
+ else gs:=jsonb_set(gs,'{phase}','"results"'::jsonb,true); gs:=jsonb_set(gs,'{result}',jsonb_build_object('winner','impostor','detail','The Judge selected an innocent player.','word',gs->>'word','impostor',gs->>'impostor'),true); update public.impostor_rooms set status='finished' where id=p_room_id; end if;
+ update public.impostor_rooms set game_state=gs,updated_at=now() where id=p_room_id;
+ return public.impostor_snapshot(p_room_id);
+end $$;
+
+create or replace function public.impostor_submit_guess(p_room_id uuid,p_guess text)
+returns jsonb language plpgsql security definer set search_path=public
+as $$
+declare r public.impostor_rooms; gs jsonb; win text; detail_text text;
+begin
+ select * into r from public.impostor_rooms where id=p_room_id for update;
+ if not found then raise exception 'Room not found'; end if;
+ gs:=r.game_state;
+ if gs->>'phase'<>'guess' or gs->>'impostor'<>auth.uid()::text then raise exception 'You cannot make this guess'; end if;
+ if lower(trim(coalesce(p_guess,'')))=lower(gs->>'word') then win:='impostor'; detail_text:='The impostor guessed the secret word.';
+ else win:='crew'; detail_text:='The impostor guessed incorrectly.'; end if;
+ gs:=jsonb_set(gs,'{phase}','"results"'::jsonb,true);
+ gs:=jsonb_set(gs,'{result}',jsonb_build_object('winner',win,'detail',detail_text,'word',gs->>'word','impostor',gs->>'impostor'),true);
+ update public.impostor_rooms set game_state=gs,status='finished',updated_at=now() where id=p_room_id;
+ return public.impostor_snapshot(p_room_id);
+end $$;
+
+create or replace function public.impostor_leave_room(p_room_id uuid)
+returns void language plpgsql security definer set search_path=public
+as $$
+declare r public.impostor_rooms; gs jsonb; uid uuid:=auth.uid(); next_host uuid;
+begin
+ select * into r from public.impostor_rooms where id=p_room_id for update;
+ if not found then return; end if;
+ gs:=r.game_state;
+ if gs is not null and gs->>'phase'<>'results' and gs->>'impostor'=uid::text then
+   gs:=jsonb_set(gs,'{phase}','"results"'::jsonb,true);
+   gs:=jsonb_set(gs,'{result}',jsonb_build_object('winner','crew','detail','The impostor left the game.','word',gs->>'word','impostor',gs->>'impostor'),true);
+   update public.impostor_rooms set game_state=gs,status='finished' where id=p_room_id;
+ end if;
+ delete from public.impostor_players where room_id=p_room_id and user_id=uid;
+ if r.host_id=uid then
+   select user_id into next_host from public.impostor_players where room_id=p_room_id order by joined_at limit 1;
+   if next_host is null then delete from public.impostor_rooms where id=p_room_id;
+   else update public.impostor_rooms set host_id=next_host where id=p_room_id; end if;
+ elsif (select count(*) from public.impostor_players where room_id=p_room_id)<2 and gs is not null and gs->>'phase'<>'results' then
+   gs:=jsonb_set(gs,'{phase}','"results"'::jsonb,true);
+   gs:=jsonb_set(gs,'{result}',jsonb_build_object('winner','crew','detail','Not enough players remained.','word',gs->>'word','impostor',gs->>'impostor'),true);
+   update public.impostor_rooms set game_state=gs,status='finished' where id=p_room_id;
+ end if;
+end $$;
+
+create or replace function public.impostor_reset_room(p_room_id uuid)
+returns jsonb language plpgsql security definer set search_path=public
+as $$
+begin
+ if not exists(select 1 from public.impostor_rooms where id=p_room_id and host_id=auth.uid()) then raise exception 'Only the host can restart'; end if;
+ update public.impostor_rooms set game_state=null,status='waiting',updated_at=now() where id=p_room_id;
+ update public.impostor_players set is_ready=(user_id=auth.uid()) where room_id=p_room_id;
+ return public.impostor_snapshot(p_room_id);
+end $$;
+
+grant execute on function public.impostor_start_game(uuid) to authenticated;
+grant execute on function public.impostor_submit_hint(uuid,text) to authenticated;
+grant execute on function public.impostor_advance_timeout(uuid) to authenticated;
+grant execute on function public.impostor_submit_vote(uuid,uuid) to authenticated;
+grant execute on function public.impostor_judge_vote(uuid,uuid) to authenticated;
+grant execute on function public.impostor_submit_guess(uuid,text) to authenticated;
+grant execute on function public.impostor_leave_room(uuid) to authenticated;
+grant execute on function public.impostor_reset_room(uuid) to authenticated;
