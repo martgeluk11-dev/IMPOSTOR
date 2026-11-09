@@ -24,7 +24,7 @@ returns jsonb
 language plpgsql
 security definer
 set search_path=public
-as $
+as $$
 declare uid uuid := auth.uid(); profile_row public.impostor_profiles;
 begin
   if uid is null then raise exception 'Sign in required'; end if;
