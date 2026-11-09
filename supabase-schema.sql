@@ -35,10 +35,8 @@ create or replace function public.impostor_is_member(p_room_id uuid)
 returns boolean language sql stable security definer set search_path=public
 as $$ select exists(select 1 from public.impostor_players where room_id=p_room_id and user_id=auth.uid()) $$;
 
-drop policy if exists "Room members can read their room" on public.impostor_rooms;
-create policy "Room members can read their room" on public.impostor_rooms for select to authenticated using (public.impostor_is_member(id));
-drop policy if exists "Room members can read players" on public.impostor_players;
-create policy "Room members can read players" on public.impostor_players for select to authenticated using (public.impostor_is_member(room_id));
+-- No direct table SELECT policies: game_state contains the secret word and impostor.
+-- All reads go through impostor_snapshot(), which filters private information per player.
 
 create or replace function public.impostor_snapshot(p_room_id uuid)
 returns jsonb language plpgsql stable security definer set search_path=public
@@ -163,16 +161,8 @@ grant execute on function public.impostor_set_ready(uuid,boolean) to authenticat
 grant execute on function public.impostor_get_room(text) to authenticated;
 grant execute on function public.impostor_snapshot(uuid) to authenticated;
 
-do $$ begin
- alter publication supabase_realtime add table public.impostor_rooms;
-exception when duplicate_object then null; when others then
- if sqlerrm not like '%already member%' then raise; end if;
-end $$;
-do $$ begin
- alter publication supabase_realtime add table public.impostor_players;
-exception when duplicate_object then null; when others then
- if sqlerrm not like '%already member%' then raise; end if;
-end $$;
+-- Realtime table replication is intentionally not enabled: it would expose private game_state columns.
+-- The client polls the filtered snapshot RPC instead.
 
 
 create or replace function public.impostor_start_game(p_room_id uuid)
