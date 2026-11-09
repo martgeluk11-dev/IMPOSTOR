@@ -16,6 +16,7 @@ as $$
 declare
   r record;
   removed_count integer := 0;
+  batch_removed integer := 0;
   remaining_count integer;
   next_host uuid;
   gs jsonb;
@@ -46,7 +47,8 @@ begin
     delete from public.impostor_players
     where room_id = r.id
       and last_seen < now() - interval '2 minutes';
-    get diagnostics removed_count = removed_count + row_count;
+    get diagnostics batch_removed = row_count;
+    removed_count := removed_count + batch_removed;
 
     select count(*) into remaining_count
     from public.impostor_players where room_id = r.id;
