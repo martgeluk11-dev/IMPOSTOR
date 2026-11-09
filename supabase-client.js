@@ -64,6 +64,38 @@
     players = Object.fromEntries((list || []).map(p => [p.id, p]));
   }
 
+
+  let lastKnownLevel = null;
+
+  function renderProgress(playerList) {
+    const me = (playerList || []).find(p => p.id === playerId);
+    if (!me) return;
+    const stats = $("profileStats");
+    if (stats) stats.innerHTML = '<span>🪙 ' + Number(me.coins || 0).toLocaleString() + '</span><span>LVL ' + Number(me.level || 1) + '</span>';
+    if (lastKnownLevel !== null && Number(me.level || 1) > lastKnownLevel) {
+      const summary = $("rewardSummary");
+      if (summary) summary.dataset.levelup = "true";
+    }
+    lastKnownLevel = Number(me.level || 1);
+  }
+
+  function renderMatchRewards(result) {
+    const box = $("rewardSummary");
+    if (!box || !result) return;
+    const role = privateInfo?.role || "crew";
+    const won = (result.winner === "crew" && role === "crew") ||
+                (result.winner === "impostor" && role === "impostor");
+    const coins = won ? (role === "impostor" ? 60 : 25) : 0;
+    const xp = won ? (role === "impostor" ? 160 : 100) : 15;
+    const me = Object.values(players).find(p => p.id === playerId);
+    const level = Number(me?.level || 1);
+    box.innerHTML =
+      '<div class="reward-earned"><strong>+' + coins + ' 🪙</strong><span>+' + xp + ' XP</span></div>' +
+      '<div class="reward-caption">' + (won ? "Victory rewards" : "Participation XP") +
+      ' · Level ' + level + (box.dataset.levelup === "true" ? ' · LEVEL UP!' : '') + '</div>';
+    box.dataset.levelup = "false";
+  }
+
   function applySnapshot(payload) {
     if (!payload) return;
     roomId = payload.roomId || roomId;
@@ -78,6 +110,7 @@
     privateInfo = payload.privateInfo || null;
     if (!state) return;
     mapPlayers(state.players);
+    renderProgress(state.players);
     game = state.phase === "lobby" ? null : state;
     const me = (state.players || []).find(p => p.id === playerId);
     myReady = !!me?.ready;
@@ -136,6 +169,7 @@
     }
     if (state.phase === "results" && state.result) {
       showResults(state.result);
+      renderMatchRewards(state.result);
     }
   }
 
