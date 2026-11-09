@@ -33,7 +33,7 @@ begin
   select * into profile_row from public.impostor_profiles where user_id=uid;
   return jsonb_build_object('coins',profile_row.coins,'xp',profile_row.xp,'level',profile_row.level);
 end;
-$;
+$$;
 grant execute on function public.impostor_my_profile() to authenticated;
 
 create or replace function public.impostor_pay_match_rewards()
