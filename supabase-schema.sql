@@ -91,7 +91,7 @@ declare uid uuid:=auth.uid(); rid uuid; code_value text; emoji_value text;
 begin
  if uid is null then raise exception 'Sign in required'; end if;
  if p_max_players not between 2 and 8 or p_rounds not between 3 and 10 or p_visibility not in ('public','private') then raise exception 'Invalid room settings'; end if;
- loop code_value:=upper(substr(encode(gen_random_bytes(6),'hex'),1,6)); exit when not exists(select 1 from public.impostor_rooms where code=code_value); end loop;
+ loop code_value:=upper(substr(replace(gen_random_uuid()::text,'-',''),1,6)); exit when not exists(select 1 from public.impostor_rooms where code=code_value); end loop;
  emoji_value:=(array['🦊','🐸','🐼','🐙','🦄','🐧','🐻','🦋'])[1+floor(random()*8)::int];
  insert into public.impostor_rooms(code,host_id,visibility,max_players,total_rounds) values(code_value,uid,p_visibility,p_max_players,p_rounds) returning id into rid;
  insert into public.impostor_players(room_id,user_id,player_name,emoji,is_ready) values(rid,uid,left(trim(coalesce(p_name,'Player')),16),emoji_value,true);
