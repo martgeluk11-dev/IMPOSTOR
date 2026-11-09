@@ -39,6 +39,16 @@
     if (document.visibilityState === "visible") heartbeat();
   });
 
+  async function loadMyProfile() {
+    try {
+      const profile = await rpc("impostor_my_profile");
+      const stats = $("profileStats");
+      if (stats) stats.innerHTML = '<span>🪙 ' + Number(profile.coins || 0).toLocaleString() + '</span><span>LVL ' + Number(profile.level || 1) + '</span>';
+    } catch (e) {
+      console.warn("Could not load player profile:", e.message || e);
+    }
+  }
+
   async function ensureAuth() {
     const { data: { session }, error: sessionError } = await db.auth.getSession();
     if (sessionError) throw sessionError;
@@ -373,7 +383,10 @@
   $("codeBackBtn").onclick = () => setScreen("servers");
   $("createBackBtn").onclick = () => setScreen("home");
 
-  ensureAuth().then(() => setConnection("CONNECTED")).catch(e => {
+  ensureAuth().then(async () => {
+    setConnection("CONNECTED");
+    await loadMyProfile();
+  }).catch(e => {
     setConnection("AUTH ERROR");
     console.error("Supabase auth:", e);
     $("serverBrowserNote").textContent = e.message || "Could not connect to Supabase.";
