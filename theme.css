@@ -396,3 +396,5 @@ html,body{color:#211344}
 .reward-earned span{color:#6540f5}
 .reward-caption{text-align:center;margin-top:6px;font-size:10px;font-weight:800;letter-spacing:.7px;color:#81749e;text-transform:uppercase}
 @media(max-width:560px){.top-right{gap:6px}.profile-stats{gap:6px;padding:6px 7px;font-size:9px}.top-right .pill{padding:7px 8px}}
+
+@media(max-width:560px){.profile-stats{gap:5px;padding:6px 6px;font-size:8px}.top-right .pill{font-size:7px}}
