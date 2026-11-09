@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="theme.css?v=5">
 </head>
 <body><main class="app">
-<header class="top"><div class="brand-wrap"><div class="brand-mark" aria-hidden="true"><span></span></div><div class="brand">IMPOSTOR<span>THE WORD BLUFF GAME</span></div></div><div class="pill" id="connection">NOT CONNECTED</div></header>
+<header class="top"><div class="brand-wrap"><div class="brand-mark" aria-hidden="true"><span></span></div><div class="brand">IMPOSTOR<span>THE WORD BLUFF GAME</span></div></div><div class="top-right"><div class="profile-stats" id="profileStats"><span>🪙 0</span><span>LVL 1</span></div><div class="pill" id="connection">NOT CONNECTED</div></div></header>
 <section id="home" class="screen active">
 <div class="home-intro">
 <div class="eyebrow">A SOCIAL DEDUCTION GAME</div>
@@ -73,7 +73,7 @@
 <section id="vote" class="screen"><div class="panel"><div class="eyebrow">TIME TO DECIDE</div><h2 class="section-title">Who's acting suspicious?</h2><p class="sub" id="voteDescription">Vote for the player you think is the impostor. Your vote is private.</p><div class="vote-list" id="voteList"></div><div class="notice" id="voteWait"></div><button class="btn primary" id="confirmVote" style="width:100%" disabled>Lock in vote</button><div class="error" id="voteError"></div></div></section>
 <section id="judge" class="screen"><div class="panel"><div class="eyebrow">IT'S A TIE</div><h2 class="section-title">The Judge decides.</h2><p class="sub">Choose one of the tied players. This decision is final.</p><div class="vote-list" id="judgeList"></div><button class="btn primary" id="confirmJudge" style="width:100%" disabled>Choose player</button></div></section>
 <section id="guess" class="screen"><div class="panel"><div class="eyebrow">ONE LAST CHANCE</div><h2 class="section-title">Guess the secret word.</h2><p class="sub">You were caught. Can you still steal the win?</p><div class="field"><label for="guessInput">YOUR FINAL GUESS</label><input id="guessInput" maxlength="40" placeholder="What's the word?"></div><button class="btn primary" id="submitGuess" style="width:100%">Make final guess</button></div></section>
-<section id="results" class="screen"><div class="panel result"><div class="emoji" id="resultEmoji">🎉</div><div class="eyebrow">MATCH COMPLETE</div><h2 id="resultTitle">CREW WINS!</h2><p id="resultText"></p><div class="room-code" id="resultWord">SECRET WORD</div><div class="players" id="resultPlayers"></div><button class="btn primary" id="rematchBtn" style="width:100%">Play again</button><button class="btn ghost" id="backHomeBtn" style="width:100%">Back to home</button></div></section>
+<section id="results" class="screen"><div class="panel result"><div class="emoji" id="resultEmoji">🎉</div><div class="eyebrow">MATCH COMPLETE</div><h2 id="resultTitle">CREW WINS!</h2><p id="resultText"></p><div class="room-code" id="resultWord">SECRET WORD</div><div class="reward-summary" id="rewardSummary"></div><div class="players" id="resultPlayers"></div><button class="btn primary" id="rematchBtn" style="width:100%">Play again</button><button class="btn ghost" id="backHomeBtn" style="width:100%">Back to home</button></div></section>
 <p class="footer">IMPOSTOR · Phase 1 · Play with people you trust. Trust no one.</p>
 </main>
 <script>
