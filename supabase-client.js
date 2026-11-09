@@ -12,6 +12,7 @@
   let roomId = null;
   let roomRefreshBusy = false;
   let currentState = null;
+  let lastSnapshotSignature = null;
   let myReady = false;
 
   async function ensureAuth() {
@@ -43,9 +44,13 @@
     if (!payload) return;
     roomId = payload.roomId || roomId;
     roomCode = payload.roomCode || roomCode;
+    const signature = JSON.stringify([payload.isHost, payload.state, payload.privateInfo]);
+    if (signature === lastSnapshotSignature) return;
+    lastSnapshotSignature = signature;
     isHost = !!payload.isHost;
     const state = payload.state;
     currentState = state;
+    if (state?.phase !== "hints") clearInterval(hostTimer);
     privateInfo = payload.privateInfo || null;
     if (!state) return;
     mapPlayers(state.players);
@@ -313,6 +318,9 @@
     console.error("Supabase auth:", e);
     $("serverBrowserNote").textContent = e.message || "Could not connect to Supabase.";
   });
+
+  // The legacy timer calls this global function; redirect it to the server-side timer RPC.
+  window.advanceIfTimedOut = advanceIfTimedOut;
 
   // Keep the public directory fresh while it is open.
   setInterval(() => {
