@@ -384,3 +384,15 @@ html,body{color:#211344}
  .player{padding:9px}
  .panel{padding:19px}
 }
+
+
+/* Coins + XP profile */
+.top-right{display:flex;align-items:center;gap:10px}
+.profile-stats{display:flex;align-items:center;gap:9px;padding:7px 11px;border:1.5px solid rgba(65,38,145,.2);border-radius:10px;background:rgba(255,255,255,.42);font-size:10px;font-weight:900;letter-spacing:.5px;color:#39236e;white-space:nowrap}
+.profile-stats span:first-child{color:#b87900}
+.reward-summary{margin:18px auto 12px;padding:15px 18px;max-width:360px;border:1.5px solid #d9ceff;border-radius:13px;background:#f5f0ff;color:#34205f}
+.reward-earned{display:flex;justify-content:center;align-items:center;gap:20px;font:800 20px 'Space Grotesk'}
+.reward-earned strong{color:#b87900}
+.reward-earned span{color:#6540f5}
+.reward-caption{text-align:center;margin-top:6px;font-size:10px;font-weight:800;letter-spacing:.7px;color:#81749e;text-transform:uppercase}
+@media(max-width:560px){.top-right{gap:6px}.profile-stats{gap:6px;padding:6px 7px;font-size:9px}.top-right .pill{padding:7px 8px}}
