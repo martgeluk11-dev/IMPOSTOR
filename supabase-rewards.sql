@@ -9,6 +9,34 @@ alter table public.impostor_players
 alter table public.impostor_rooms
   add column if not exists rewards_paid boolean not null default false;
 
+-- Account-level profile: progression survives leaving rooms and joining new ones.
+create table if not exists public.impostor_profiles (
+  user_id uuid primary key,
+  coins integer not null default 0,
+  xp integer not null default 0,
+  level integer not null default 1,
+  updated_at timestamptz not null default now()
+);
+alter table public.impostor_profiles enable row level security;
+
+create or replace function public.impostor_my_profile()
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path=public
+as $
+declare uid uuid := auth.uid(); profile_row public.impostor_profiles;
+begin
+  if uid is null then raise exception 'Sign in required'; end if;
+  insert into public.impostor_profiles(user_id) values(uid)
+  on conflict(user_id) do nothing;
+  select * into profile_row from public.impostor_profiles where user_id=uid;
+  return jsonb_build_object('coins',profile_row.coins,'xp',profile_row.xp,'level',profile_row.level);
+end;
+$;
+grant execute on function public.impostor_my_profile() to authenticated;
+
 create or replace function public.impostor_pay_match_rewards()
 returns trigger
 language plpgsql
@@ -33,23 +61,29 @@ begin
     return NEW;
   end if;
 
-  update public.impostor_players
+  insert into public.impostor_profiles(user_id)
+  select user_id from public.impostor_players where room_id=NEW.id
+  on conflict(user_id) do nothing;
+
+  update public.impostor_profiles profile
   set
-    coins = coins + case
-      when winner = 'impostor' and user_id::text = impostor_id then 60
-      when winner = 'crew' and user_id::text <> impostor_id then 25
+    coins = profile.coins + case
+      when winner = 'impostor' and player.user_id::text = impostor_id then 60
+      when winner = 'crew' and player.user_id::text <> impostor_id then 25
       else 0
     end,
-    xp = xp + case
-      when winner = 'impostor' and user_id::text = impostor_id then 160
-      when winner = 'crew' and user_id::text <> impostor_id then 100
+    xp = profile.xp + case
+      when winner = 'impostor' and player.user_id::text = impostor_id then 160
+      when winner = 'crew' and player.user_id::text <> impostor_id then 100
       else 15
-    end
-  where room_id = NEW.id;
+    end,
+    updated_at = now()
+  from public.impostor_players player
+  where player.room_id=NEW.id and player.user_id=profile.user_id;
 
-  update public.impostor_players
+  update public.impostor_profiles
   set level = floor(sqrt(xp / 100.0))::integer + 1
-  where room_id = NEW.id;
+  where user_id in (select user_id from public.impostor_players where room_id=NEW.id);
 
   NEW.rewards_paid := true;
   return NEW;
@@ -86,11 +120,13 @@ begin
   end if;
 
   select coalesce(jsonb_agg(jsonb_build_object(
-    'id',user_id,'name',player_name,'ready',is_ready,'emoji',emoji,
-    'coins',coins,'xp',xp,'level',level
-  ) order by joined_at),'[]'::jsonb)
+    'id',p.user_id,'name',p.player_name,'ready',p.is_ready,'emoji',p.emoji,
+    'coins',coalesce(a.coins,0),'xp',coalesce(a.xp,0),'level',coalesce(a.level,1)
+  ) order by p.joined_at),'[]'::jsonb)
   into player_json
-  from public.impostor_players where room_id=p_room_id;
+  from public.impostor_players p
+  left join public.impostor_profiles a on a.user_id=p.user_id
+  where p.room_id=p_room_id;
 
   gs := r.game_state;
   if gs is null then
