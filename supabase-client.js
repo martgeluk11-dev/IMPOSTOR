@@ -8,7 +8,7 @@
   }
 
   const db = window.supabase.createClient(cfg.url, cfg.publishableKey);
-  let roomChannel = null;
+  let roomPoll = null;
   let roomId = null;
   let roomRefreshBusy = false;
   let currentState = null;
@@ -124,12 +124,9 @@
   }
 
   function subscribeRoom() {
-    if (roomChannel) db.removeChannel(roomChannel);
+    if (roomPoll) clearInterval(roomPoll);
     if (!roomId) return;
-    roomChannel = db.channel("impostor-room-" + roomId)
-      .on("postgres_changes", { event: "*", schema: "public", table: "impostor_rooms", filter: "id=eq." + roomId }, refreshRoom)
-      .on("postgres_changes", { event: "*", schema: "public", table: "impostor_players", filter: "room_id=eq." + roomId }, refreshRoom)
-      .subscribe();
+    roomPoll = setInterval(refreshRoom, 1200);
   }
 
   async function enterRoom(payload) {
@@ -260,7 +257,7 @@
   async function leaveRoom() {
     try { if (roomId) await rpc("impostor_leave_room", { p_room_id: roomId }); }
     catch (e) { console.warn(e); }
-    if (roomChannel) await db.removeChannel(roomChannel);
+    if (roomPoll) clearInterval(roomPoll);
     location.reload();
   }
 
