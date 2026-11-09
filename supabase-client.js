@@ -42,6 +42,7 @@
   async function loadMyProfile() {
     try {
       const profile = await rpc("impostor_my_profile");
+      updateHomeProgress(profile.coins, profile.xp, profile.level);
       const stats = $("profileStats");
       if (stats) stats.innerHTML = '<span>🪙 ' + Number(profile.coins || 0).toLocaleString() + '</span><span>LVL ' + Number(profile.level || 1) + '</span><span>' + Number(profile.xp || 0).toLocaleString() + ' XP</span>';
     } catch (e) {
@@ -75,11 +76,27 @@
   }
 
 
+  function updateHomeProgress(coins=0, xp=0, level=1) {
+    const coinNode = $("homeCoins"), levelNode = $("homeLevel");
+    const xpText = $("homeXpText"), xpFill = $("homeXpFill");
+    const currentLevel = Math.max(1, Number(level) || 1);
+    const totalXp = Math.max(0, Number(xp) || 0);
+    const start = (currentLevel - 1) ** 2 * 100;
+    const next = currentLevel ** 2 * 100;
+    const earned = Math.max(0, totalXp - start);
+    const needed = Math.max(100, next - start);
+    if (coinNode) coinNode.textContent = Number(coins || 0).toLocaleString();
+    if (levelNode) levelNode.textContent = currentLevel;
+    if (xpText) xpText.textContent = earned.toLocaleString() + " / " + needed.toLocaleString();
+    if (xpFill) xpFill.style.width = Math.min(100, earned / needed * 100) + "%";
+  }
+
   let lastKnownLevel = null;
 
   function renderProgress(playerList) {
     const me = (playerList || []).find(p => p.id === playerId);
     if (!me) return;
+    updateHomeProgress(me.coins, me.xp, me.level);
     const stats = $("profileStats");
     if (stats) stats.innerHTML = '<span>🪙 ' + Number(me.coins || 0).toLocaleString() + '</span><span>LVL ' + Number(me.level || 1) + '</span><span>' + Number(me.xp || 0).toLocaleString() + ' XP</span>';
     if (lastKnownLevel !== null && Number(me.level || 1) > lastKnownLevel) {
