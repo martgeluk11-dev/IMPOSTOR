@@ -186,7 +186,7 @@ begin
  if coalesce(array_length(ids,1),0)<2 then raise exception 'At least two players are required'; end if;
  if exists(select 1 from public.impostor_players where room_id=p_room_id and not is_ready) then raise exception 'Everyone must be ready'; end if;
  n:=1+floor(random()*array_length(words,1))::int;
- foreach i in array generate_series(1,array_length(ids,1)) loop
+ for i in 1..array_length(ids,1) loop
    hints_json:=jsonb_set(hints_json,array[ids[i]::text],(select jsonb_agg('null'::jsonb) from generate_series(1,r.total_rounds)),true);
  end loop;
  update public.impostor_rooms set status='playing',game_state=jsonb_build_object('phase','hints','round',1,'word',words[n],'category',cats[n],'impostor',ids[1+floor(random()*array_length(ids,1))::int]::text,'hints',hints_json,'votes','{}'::jsonb,'deadline',now()+interval '60 seconds','judgeId',null,'tied','[]'::jsonb,'result',null),updated_at=now() where id=p_room_id;
@@ -207,7 +207,6 @@ begin
  gs:=jsonb_set(gs,array['hints',uid::text,(round_no-1)::text],to_jsonb(clean),true);
  select not exists(select 1 from public.impostor_players p where p.room_id=p_room_id and coalesce(gs->'hints'->(p.user_id::text)->(round_no-1),'null'::jsonb)='null'::jsonb) into all_done;
  if all_done then
-   if round_no<(gs->>'round')::int + (r.total_rounds-round_no) then null; end if;
    if round_no<r.total_rounds then gs:=jsonb_set(gs,'{round}',to_jsonb(round_no+1),true); gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '60 seconds'),true);
    else gs:=jsonb_set(gs,'{phase}','"vote"'::jsonb,true); gs:=jsonb_set(gs,'{deadline}','null'::jsonb,true); end if;
  end if;
