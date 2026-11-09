@@ -125,7 +125,7 @@ grant execute on function public.impostor_heartbeat(uuid) to authenticated;
 -- even when every browser tab has been closed.
 create extension if not exists pg_cron with schema pg_catalog;
 
-do $
+do $$
 declare existing_job record;
 begin
   for existing_job in
@@ -140,4 +140,4 @@ begin
     'select public.impostor_sweep_inactive();'
   );
 end
-$;
+$$;
