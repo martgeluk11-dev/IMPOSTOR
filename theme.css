@@ -955,3 +955,20 @@ body{
 @media(max-width:720px){
  #servers,#codeEntry,#createServer{padding:0!important;margin:12px auto 0!important}
 }
+
+
+/* Larger XP level star — keep the existing background and layout */
+#home .xp-star{
+  width:98px!important;
+  height:98px!important;
+  font-size:43px!important;
+}
+@media(max-width:1050px) and (min-width:721px){
+  #home .xp-star{width:84px!important;height:84px!important;font-size:37px!important}
+}
+@media(max-width:720px){
+  #home .xp-star{width:72px!important;height:72px!important;font-size:31px!important}
+}
+@media(max-width:380px){
+  #home .xp-star{width:65px!important;height:65px!important;font-size:28px!important}
+}
