@@ -50,13 +50,83 @@
     }
   }
 
+
+  const ADJECTIVES = ["Happy","Sleepy","Sneaky","Bouncy","Wobbly","Cheeky","Misty","Lucky","Fuzzy","Cosmic","Tiny","Jolly","Swift","Chill","Goofy","Mellow"];
+  const ANIMALS = ["Hippo","Panda","Penguin","Fox","Otter","Koala","Tiger","Frog","Llama","Badger","Dolphin","Hamster","Gecko","Pigeon","Raccoon","Duck"];
+  const randomGuestName = () => ADJECTIVES[Math.floor(Math.random()*ADJECTIVES.length)] + ANIMALS[Math.floor(Math.random()*ANIMALS.length)] + (1000+Math.floor(Math.random()*9000));
+  let guestName = localStorage.getItem("impostor_guest_name") || randomGuestName();
+  localStorage.setItem("impostor_guest_name", guestName);
+  let accountUser = null;
+  let modalSubmit = null;
+  function displayProfile() {
+    const user = accountUser;
+    const custom = user && !user.is_anonymous && user.user_metadata?.display_name;
+    const shown = custom || guestName;
+    if ($("profileDisplayName")) $("profileDisplayName").textContent = shown;
+    if ($("profileDescription")) $("profileDescription").textContent = custom ? "Signed-in account · custom username" : "Guest account · progress saved on this device";
+    if ($("profileStatusText")) $("profileStatusText").textContent = custom ? "ACCOUNT CONNECTED" : "GUEST PROFILE";
+    if ($("profileAvatar")) $("profileAvatar").textContent = shown.slice(0,1).toUpperCase();
+    if ($("signupBtn")) $("signupBtn").classList.toggle("hidden", !!custom);
+    if ($("signinBtn")) $("signinBtn").classList.toggle("hidden", !!custom);
+    if ($("rerollNameBtn")) $("rerollNameBtn").classList.toggle("hidden", !!custom);
+  }
+  function openModal({title,description="",kicker="IMPOSTOR",body="",actions=[]}) {
+    $("modalKicker").textContent=kicker; $("modalTitle").textContent=title;
+    $("modalDescription").textContent=description; $("modalBody").innerHTML=body;
+    $("modalError").textContent="";
+    $("modalActions").innerHTML=actions.map((a,i)=>'<button type="button" class="modal-action '+(a.secondary?'secondary':'')+'" data-modal-action="'+i+'">'+a.label+'</button>').join("");
+    $("customModal").classList.remove("hidden");
+    actions.forEach((a,i)=>{$("modalActions").querySelector('[data-modal-action="'+i+'"]').onclick=async()=>{if(a.run)await a.run();};});
+    $("modalClose").onclick=closeModal;
+    $("customModal").onclick=e=>{if(e.target===$("customModal"))closeModal();};
+    const first=$("modalBody").querySelector("input"); if(first) setTimeout(()=>first.focus(),30);
+  }
+  function closeModal(){ $("customModal").classList.add("hidden"); }
+  function modalError(message){ $("modalError").textContent=message||"Something went wrong."; }
+  function authDialog(mode) {
+    const signup=mode==="signup";
+    openModal({kicker:"YOUR IMPOSTOR ACCOUNT",title:signup?"Choose a custom name":"Welcome back",description:signup?"Create an account to keep your custom username and progress across devices.":"Sign in to your existing IMPOSTOR account.",
+      body:'<div class="modal-field"><label for="authUsername">CUSTOM USERNAME</label><input id="authUsername" maxlength="16" minlength="3" placeholder="YourName123" autocomplete="username"></div><div class="modal-field"><label for="authEmail">EMAIL</label><input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email"></div><div class="modal-field"><label for="authPassword">PASSWORD</label><input id="authPassword" type="password" minlength="8" placeholder="At least 8 characters" autocomplete="'+(signup?'new-password':'current-password')+'"></div>',
+      actions:[{label:signup?"Create account":"Sign in",run:()=>submitAuth(mode)},{label:"Cancel",secondary:true,run:closeModal}]});
+  }
+  async function submitAuth(mode) {
+    const username=$("authUsername").value.trim();
+    const email=$("authEmail").value.trim();
+    const password=$("authPassword").value;
+    if(username.length<3||username.length>16||!/^[a-zA-Z0-9_ ]+$/.test(username)){modalError("Username must be 3–16 characters (letters, numbers, spaces or _).");return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){modalError("Enter a valid email address.");return;}
+    if(password.length<8){modalError("Your password must be at least 8 characters.");return;}
+    const buttons=$("modalActions").querySelectorAll("button");buttons.forEach(b=>b.disabled=true);
+    try {
+      if(mode==="signup"){
+        const {data,error}=await db.auth.updateUser({email,password,data:{display_name:username}});
+        if(error)throw error;
+        accountUser=data.user; displayProfile();
+        modalError("Account details saved. Check your email if confirmation is required, then sign in with these details.");
+        $("modalTitle").textContent="Check your email";
+        $("modalDescription").textContent="Your guest profile is being upgraded. Confirm your email if Supabase asks you to.";
+        $("modalBody").innerHTML="";
+        $("modalActions").innerHTML='<button class="modal-action" id="modalDone" type="button">Got it</button>';
+        $("modalDone").onclick=closeModal;
+      } else {
+        const {data,error}=await db.auth.signInWithPassword({email,password});
+        if(error)throw error;
+        accountUser=data.user;
+        const {error:metaError}=await db.auth.updateUser({data:{display_name:username}});
+        if(metaError)throw metaError;
+        accountUser=(await db.auth.getUser()).data.user;
+        displayProfile(); await loadMyProfile(); closeModal();
+      }
+    } catch(e) { modalError(e.message||"Could not complete account action."); buttons.forEach(b=>b.disabled=false); }
+  }
+
   async function ensureAuth() {
     const { data: { session }, error: sessionError } = await db.auth.getSession();
     if (sessionError) throw sessionError;
-    if (session) return session.user;
+    if (session) { accountUser=session.user; return session.user; }
     const { data, error } = await db.auth.signInAnonymously();
     if (error) throw new Error("Anonymous sign-in is disabled in Supabase. Enable it under Authentication → Sign In / Providers → Anonymous.");
-    return data.user;
+    accountUser=data.user; return data.user;
   }
 
   async function rpc(name, args = {}) {
@@ -228,7 +298,7 @@
   }
 
   async function createRoom() {
-    name = $("createName").value.trim().slice(0, 16) || "Player";
+    name = accountUser && !accountUser.is_anonymous && accountUser.user_metadata?.display_name || guestName;
     serverMaxPlayers = Number($("maxPlayers").value) || 6;
     serverRounds = Number($("roundCount").value) || 5;
     $("startServerBtn").disabled = true;
@@ -251,7 +321,7 @@
 
   async function joinRoom() {
     const code = $("joinCode").value.trim().toUpperCase();
-    name = $("joinName").value.trim().slice(0, 16) || "Player";
+    name = accountUser && !accountUser.is_anonymous && accountUser.user_metadata?.display_name || guestName;
     if (!/^[A-Z0-9]{6}$/.test(code)) {
       err("homeError", "Enter a 6-character room code.");
       return;
@@ -281,7 +351,6 @@
       ).join("") : '<div class="empty-servers"><div class="empty-icon">⌕</div><strong>No rooms to show yet</strong><span>Create a public room or try again in a moment.</span></div>';
       $("serverList").querySelectorAll("[data-code]").forEach(button => button.onclick = async () => {
         $("joinCode").value = button.dataset.code;
-        $("joinName").value = name || "Player";
         setScreen("codeEntry");
       });
       $("serverBrowserNote").textContent = rooms.length + " public room" + (rooms.length === 1 ? "" : "s") + " available.";
@@ -291,7 +360,7 @@
   }
 
   async function quickMatch() {
-    name = window.prompt("Choose your player name", "Player")?.trim().slice(0, 16) || "Player";
+    name = accountUser && !accountUser.is_anonymous && accountUser.user_metadata?.display_name || guestName;
     setConnection("FINDING GAME…");
     try {
       const payload = await rpc("impostor_quick_match", { p_name: name });
@@ -363,6 +432,9 @@
   }
 
   $("quickMatchBtn").onclick = quickMatch;
+  $("rerollNameBtn").onclick = () => { guestName=randomGuestName(); localStorage.setItem("impostor_guest_name",guestName); displayProfile(); };
+  $("signupBtn").onclick = () => authDialog("signup");
+  $("signinBtn").onclick = () => authDialog("signin");
   $("findServersBtn").onclick = () => { setScreen("servers"); loadServerList(); };
   $("createServerBtn").onclick = () => setScreen("createServer");
   $("startServerBtn").onclick = createRoom;
@@ -401,6 +473,8 @@
   $("createBackBtn").onclick = () => setScreen("home");
 
   ensureAuth().then(async () => {
+    accountUser=(await db.auth.getUser()).data.user;
+    displayProfile();
     setConnection("CONNECTED");
     await loadMyProfile();
   }).catch(e => {
