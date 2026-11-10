@@ -873,3 +873,24 @@ body{
 
 /* Background image: show more of the artwork instead of aggressively cropping it */
 body{background-size:100% 100%!important;background-position:center center!important;background-attachment:fixed!important}
+
+
+/* STAT cards: simple thick outline, with icons shifted further left */
+#home .home-xp,
+#home .home-coins{
+  border:5px solid #24113f!important;
+  outline:none!important;
+  outline-offset:0!important;
+  box-shadow:0 5px 0 #24113f!important;
+}
+#home .xp-star{left:-14px!important}
+#home .coin-icon{left:-12px!important}
+@media(max-width:720px){
+  #home .home-xp,#home .home-coins{
+    border:5px solid #24113f!important;
+    outline:none!important;
+    box-shadow:0 4px 0 #24113f!important;
+  }
+  #home .xp-star{left:-14px!important}
+  #home .coin-icon{left:-12px!important}
+}
