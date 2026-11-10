@@ -93,7 +93,7 @@
     const username=$("authUsername").value.trim();
     const email=$("authEmail").value.trim();
     const password=$("authPassword").value;
-    if(username.length<3||username.length>16||!/^[a-zA-Z0-9_ ]+$/.test(username)){modalError("Username must be 3–16 characters (letters, numbers, spaces or _).");return;}
+    if(mode==="signup"&&(username.length<3||username.length>16||!/^[a-zA-Z0-9_ ]+$/.test(username))){modalError("Username must be 3–16 characters (letters, numbers, spaces or _).");return;}
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){modalError("Enter a valid email address.");return;}
     if(password.length<8){modalError("Your password must be at least 8 characters.");return;}
     const buttons=$("modalActions").querySelectorAll("button");buttons.forEach(b=>b.disabled=true);
@@ -112,8 +112,10 @@
         const {data,error}=await db.auth.signInWithPassword({email,password});
         if(error)throw error;
         accountUser=data.user;
-        const {error:metaError}=await db.auth.updateUser({data:{display_name:username}});
-        if(metaError)throw metaError;
+        if(username){
+          const {error:metaError}=await db.auth.updateUser({data:{display_name:username}});
+          if(metaError)throw metaError;
+        }
         accountUser=(await db.auth.getUser()).data.user;
         displayProfile(); await loadMyProfile(); closeModal();
       }
