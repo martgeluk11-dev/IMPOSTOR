@@ -655,3 +655,101 @@ body:before{content:none!important;display:none!important}
 #home .game-logo.game-logo-image .logo-doodle,#home .game-logo.game-logo-image .logo-word,#home .game-logo.game-logo-image .logo-subtitle{display:none}
 @media(max-width:720px){#home .game-logo.game-logo-image{width:min(100%,440px);aspect-ratio:760/310;margin:0 auto 2px;padding:0}#home .game-logo.game-logo-image img{max-height:160px}}
 @media(max-width:390px){#home .game-logo.game-logo-image{width:100%}#home .game-logo.game-logo-image img{max-height:132px}}
+
+
+/* HOME LAYOUT REBUILD — clean desktop composition + compact mobile */
+#home.active{
+  display:grid!important;
+  grid-template-columns:minmax(225px,275px) minmax(420px,590px);
+  grid-template-rows:minmax(0,1fr);
+  align-items:center;justify-content:center;
+  column-gap:clamp(48px,7vw,112px);row-gap:0;
+  min-height:calc(100svh - 42px);
+  padding:34px 28px 42px!important;
+}
+#home .home-sidecard{display:none!important}
+#home .home-profile-card{
+  display:flex!important;grid-column:1;grid-row:1;
+  width:100%;max-width:275px;justify-self:center;align-self:center;
+  padding:24px 20px 21px;box-sizing:border-box;
+}
+#home .home-center{
+  grid-column:2;grid-row:1;align-self:center;justify-self:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:100%;max-width:590px;min-width:0;gap:clamp(18px,2.5vh,27px);
+  margin:0;padding:0;
+}
+#home .game-logo.game-logo-image{
+  display:flex;width:min(100%,560px);height:auto;min-height:0;aspect-ratio:760/310;
+  margin:-26px auto 0;padding:0;align-items:center;justify-content:center;
+  filter:drop-shadow(0 6px 0 rgba(42,12,75,.24));
+}
+#home .game-logo.game-logo-image img{display:block;width:100%;height:100%;max-height:205px;object-fit:contain}
+#home .game-logo.game-logo-image .logo-subtitle{display:none!important}
+#home .home-menu{width:100%;max-width:500px;padding:25px 27px;gap:14px;border-width:6px;border-radius:17px}
+#home .menu-action{min-height:73px;font-size:clamp(27px,2.5vw,35px)!important;border-radius:17px!important}
+#home .home-footnote{margin-top:0;font-size:8px;letter-spacing:1.35px}
+#home .home-xp{top:24px;left:auto;right:22px;width:235px;height:61px;padding-left:59px;border-radius:22px}
+#home .xp-star{width:70px;height:70px;font-size:31px}
+#home .xp-track strong{font-size:22px}
+#home .home-coins{left:auto;right:25px;bottom:25px;width:190px;min-width:0;height:59px;padding-left:70px}
+#home .coin-icon{width:65px;height:65px;font-size:39px}
+#home .home-coins strong{font-size:29px}
+@media(max-width:1050px) and (min-width:721px){
+ #home.active{grid-template-columns:minmax(205px,245px) minmax(360px,1fr);column-gap:34px;padding:90px 20px 80px!important}
+ #home .home-xp{top:12px;right:12px}
+ #home .home-coins{right:15px;bottom:12px}
+ #home .home-profile-card{padding:18px 14px}
+ #home .home-menu{padding:21px 20px}
+ #home .menu-action{min-height:65px}
+ #home .game-logo.game-logo-image{margin:-10px auto 0}
+}
+@media(max-width:720px){
+ #home.active{
+  display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:15px;width:100%;min-height:calc(100svh - 30px);
+  padding:calc(12px + env(safe-area-inset-top)) 0 calc(76px + env(safe-area-inset-bottom))!important;
+  margin:0!important;
+ }
+ #home .home-sidecard,#home .home-profile-card{display:none!important}
+ #home .home-xp{
+  position:absolute;top:calc(12px + env(safe-area-inset-top));left:0;right:auto;
+  align-self:flex-start;width:min(205px,57vw);height:51px;margin:0;
+  padding:5px 10px 5px 49px;border-radius:0 18px 18px 0;
+ }
+ #home .xp-star{left:-3px;width:60px;height:60px;font-size:26px}
+ #home .xp-track{margin-left:5px;gap:2px}
+ #home .xp-track strong{font-size:clamp(16px,4.8vw,19px)}
+ #home .home-center{
+  display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:15px;width:100%;max-width:460px;min-width:0;margin:0;padding:0;
+ }
+ #home .game-logo.game-logo-image{
+  width:min(100%,390px);max-width:390px;height:auto;min-height:0;aspect-ratio:760/310;
+  margin:0 auto;padding:0;filter:drop-shadow(0 4px 0 rgba(42,12,75,.22));
+ }
+ #home .game-logo.game-logo-image img{width:100%;height:100%;max-height:142px;object-fit:contain}
+ #home .home-menu{display:grid;width:100%;max-width:420px;box-sizing:border-box;margin:0 auto;padding:17px 15px;gap:12px;border-width:5px;border-radius:15px}
+ #home .menu-action{width:100%;min-height:59px;padding:9px 12px!important;border-width:3px!important;border-radius:13px!important;font-size:clamp(23px,6.3vw,30px)!important;line-height:1.05;white-space:normal;box-shadow:0 4px 0 #a47bdf,0 6px 0 #34205a!important}
+ #home .menu-action span{display:none}
+ #home .home-footnote{flex-wrap:wrap;justify-content:center;white-space:normal;text-align:center;font-size:7px;letter-spacing:.7px;gap:5px;margin:0}
+ #home .home-coins{
+  position:absolute;left:8px;right:auto;bottom:calc(12px + env(safe-area-inset-bottom));
+  width:165px;min-width:0;height:49px;margin:0;padding:5px 12px 5px 59px;
+ }
+ #home .coin-icon{left:0;width:56px;height:56px;font-size:33px}
+ #home .home-coins strong{font-size:25px}
+}
+@media(max-width:380px){
+ #home .home-center{gap:12px}
+ #home .game-logo.game-logo-image{width:min(100%,340px)}
+ #home .game-logo.game-logo-image img{max-height:124px}
+ #home .home-menu{padding:14px 11px;gap:10px}
+ #home .menu-action{min-height:54px;font-size:22px!important}
+ #home .home-xp{width:178px;height:47px;padding-left:43px}
+ #home .xp-star{width:55px;height:55px;font-size:23px}
+ #home .xp-track strong{font-size:15px}
+ #home .home-coins{width:150px;height:45px;padding-left:55px}
+ #home .coin-icon{width:51px;height:51px;font-size:30px}
+ #home .home-coins strong{font-size:23px}
+}
