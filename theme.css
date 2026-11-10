@@ -456,3 +456,108 @@ body:before{content:none!important;display:none!important}
 .profile-status{display:flex;justify-content:center;align-items:center;gap:7px;padding-top:13px;border-top:1px solid rgba(45,20,74,.2);font:800 9px 'DM Sans';letter-spacing:1px;color:#51327f}
 .profile-status span{width:7px;height:7px;border-radius:50%;background:#1bb77c;box-shadow:0 0 0 3px rgba(27,183,124,.16)}
 @media(max-width:1120px){.home-profile-card{display:none}}
+
+
+/* ===== MOBILE REPAIR + IN-GAME BRAND HEADER ===== */
+@media(max-width:720px){
+  html,body{width:100%;min-width:0;overflow-x:hidden}
+  body{min-height:100svh}
+  .app{width:100%;max-width:100%;min-height:100svh;padding:12px 16px calc(18px + env(safe-area-inset-bottom))!important;margin:0!important;overflow-x:clip}
+  .top{display:none!important}
+  #home.active{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto minmax(0,1fr) auto;
+    align-items:center;justify-items:center;
+    gap:clamp(16px,3vh,25px);
+    width:100%;min-height:calc(100svh - 30px);
+    padding:calc(68px + env(safe-area-inset-top)) 0 calc(76px + env(safe-area-inset-bottom))!important;
+    margin:0!important;
+  }
+  #home .home-xp{
+    position:absolute;top:calc(10px + env(safe-area-inset-top));left:5px;
+    width:min(205px,58vw);height:53px;padding:6px 10px 6px 48px;
+    border-radius:0 19px 19px 0;
+  }
+  #home .xp-star{left:-3px;width:62px;height:62px;font-size:27px}
+  #home .xp-track{margin-left:7px;gap:2px}
+  #home .xp-track strong{font-size:clamp(17px,5vw,20px)}
+  #home .xp-bar{height:5px}
+  #home .home-coins{
+    position:absolute;left:8px;bottom:calc(10px + env(safe-area-inset-bottom));
+    min-width:0;width:174px;height:51px;padding:5px 15px 5px 64px;
+    border-radius:40px;
+  }
+  #home .coin-icon{left:0;width:59px;height:59px;font-size:36px}
+  #home .home-coins strong{font-size:27px}
+  #home .home-sidecard,#home .home-profile-card{display:none!important}
+  #home .home-center{
+    grid-column:1;grid-row:2;
+    display:flex!important;flex-direction:column;align-items:center;justify-content:center;
+    width:100%;max-width:520px;min-width:0;gap:clamp(17px,3vh,24px);
+    margin:0;padding:0;
+  }
+  #home .game-logo{width:100%;max-width:440px;min-width:0;min-height:0;height:auto;padding:28px 0 0;margin:0}
+  #home .logo-word{
+    max-width:100%;font-size:clamp(39px,10.8vw,62px);
+    letter-spacing:clamp(-3px,-.7vw,-1.5px);line-height:1;
+    -webkit-text-stroke:2px #21103e;
+  }
+  #home .logo-eye{border-width:2px;box-shadow:inset 0 0 0 2px #fff}
+  #home .logo-doodle{border-width:2px;border-radius:11px;box-shadow:0 3px 0 #21103e}
+  #home .logo-knife{left:9%;top:0;width:47px;height:41px;font-size:22px}
+  #home .logo-question{left:calc(50% - 26px);top:-8px;width:53px;height:51px;font-size:36px}
+  #home .logo-chat{right:8%;top:5px;width:47px;height:38px;font-size:17px}
+  #home .logo-subtitle{margin-top:10px;font-size:8px;letter-spacing:2.5px}
+  #home .home-menu{
+    width:100%;max-width:440px;min-width:0;
+    grid-template-columns:minmax(0,1fr);
+    gap:13px;padding:clamp(17px,5vw,24px);
+    border-width:5px;border-radius:16px;
+    box-shadow:0 8px 0 #25113f,0 12px 20px rgba(48,12,77,.18);
+  }
+  #home .menu-action{
+    width:100%;min-width:0;min-height:clamp(58px,15vw,70px);
+    padding:10px 13px!important;border-width:3px!important;border-radius:15px!important;
+    font-size:clamp(24px,6.8vw,32px)!important;letter-spacing:-.5px;
+    white-space:normal;line-height:1.05;
+    box-shadow:0 4px 0 #a47bdf,0 6px 0 #34205a!important;
+  }
+  #home .menu-action span{display:none}
+  #home .home-footnote{flex-wrap:wrap;white-space:normal;text-align:center;font-size:7px;letter-spacing:.8px;gap:6px}
+  /* Other game screens: keep the top brand visible and controls inside the viewport. */
+  body:has(.screen.active:not(#home)) .top{display:flex!important;gap:10px;margin:0 0 22px}
+  body:has(.screen.active:not(#home)) .app{padding-top:calc(14px + env(safe-area-inset-top))!important}
+  .page-top{gap:8px;flex-wrap:wrap}
+  .page-heading{max-width:100%}
+  .setup-form,.panel,.lobby-layout,.lobby-people,.lobby-invite{min-width:0;max-width:100%}
+  .settings-grid{grid-template-columns:minmax(0,1fr)!important}
+  .visibility-options{flex-direction:row!important}
+  .visibility-options>*{min-width:0}
+  .hint-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .hint-card{min-width:0;overflow-wrap:anywhere}
+  .player-name{overflow-wrap:anywhere}
+}
+@media(max-width:380px){
+  #home.active{gap:14px;padding-top:calc(64px + env(safe-area-inset-top))!important;padding-bottom:calc(68px + env(safe-area-inset-bottom))!important}
+  #home .home-xp{width:185px;height:49px;padding-left:44px}
+  #home .xp-star{width:56px;height:56px;font-size:24px}
+  #home .xp-track strong{font-size:16px}
+  #home .home-center{gap:15px}
+  #home .logo-word{font-size:38px;letter-spacing:-2px}
+  #home .logo-knife{left:7%;transform:scale(.82) rotate(-13deg)}
+  #home .logo-chat{right:6%;transform:scale(.82) rotate(12deg)}
+  #home .home-menu{padding:15px 12px;gap:11px}
+  #home .menu-action{min-height:56px;font-size:23px!important}
+  #home .home-coins{width:158px;height:47px;padding-left:58px}
+  #home .coin-icon{width:54px;height:54px;font-size:32px}
+  #home .home-coins strong{font-size:24px}
+}
+@media(min-width:721px){
+  body:has(.screen.active:not(#home)) .top{display:flex!important}
+  body:has(#home.active) .top{display:none!important}
+}
+/* Compact in-game wordmark treatment (the supplied full logo belongs in-game, not on the home menu). */
+.top .brand{font:800 20px 'Fredoka','DM Sans',sans-serif;letter-spacing:-.7px;color:#fff}
+.top .brand span{display:block;margin-top:2px;color:#c9a8ff;font:800 8px 'DM Sans',sans-serif;letter-spacing:2px}
+.top .brand-mark{flex:none}
