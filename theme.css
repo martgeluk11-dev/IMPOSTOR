@@ -869,3 +869,7 @@ body{
  #home > .home-coins{order:1!important}
  #home > .home-center{order:2!important}
 }
+
+
+/* Background image: show more of the artwork instead of aggressively cropping it */
+body{background-size:100% 100%!important;background-position:center center!important;background-attachment:fixed!important}
