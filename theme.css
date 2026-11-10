@@ -832,3 +832,40 @@ body:before{content:none!important;display:none!important}
  #home > .home-profile-card{display:flex!important;order:3!important;width:min(100%,440px)!important;max-width:440px!important;margin:0 auto!important}
  #home > .home-center{order:2!important}
 }
+
+
+/* HOME polish: left stats rail, outlined stat cards, clean footer-free canvas */
+@media(min-width:721px){
+ #home.active{
+  display:grid!important;
+  grid-template-columns:270px minmax(500px,680px)!important;
+  grid-template-rows:auto auto minmax(0,1fr)!important;
+  column-gap:clamp(54px,7vw,110px)!important;
+  row-gap:13px!important;
+  align-items:center!important;justify-content:center!important;
+  padding:28px 24px 34px!important;min-height:calc(100svh - 72px)!important;
+ }
+ #home > .home-xp{grid-column:1!important;grid-row:1!important;position:relative!important;inset:auto!important;justify-self:start!important;width:220px!important;height:62px!important;margin:0!important;border:3px solid #24113f!important;outline:2px solid rgba(255,255,255,.9)!important;outline-offset:2px!important;box-shadow:0 5px 0 #24113f,0 7px 0 rgba(255,255,255,.65)!important;border-radius:17px!important}
+ #home > .home-coins{grid-column:1!important;grid-row:2!important;position:relative!important;inset:auto!important;justify-self:start!important;width:190px!important;height:58px!important;margin:0!important;border:3px solid #24113f!important;outline:2px solid rgba(255,255,255,.9)!important;outline-offset:2px!important;box-shadow:0 5px 0 #24113f,0 7px 0 rgba(255,255,255,.65)!important;border-radius:17px!important}
+ #home > .home-profile-card{grid-column:1!important;grid-row:3!important;justify-self:start!important;align-self:start!important;width:245px!important;max-width:245px!important;margin:5px 0 0 -18px!important}
+ #home > .home-center{grid-column:2!important;grid-row:1/4!important;align-self:center!important;justify-self:center!important}
+ #home .home-footnote{display:none!important}
+}
+#home .home-footnote{display:none!important}
+.footer{display:none!important}
+body{
+ background-image:linear-gradient(rgba(20,8,43,.18),rgba(20,8,43,.32)),url("https://i.postimg.cc/gkpGZZfm/Gemini-Generated-Image-yg4yx8yg4yx8yg4y.jpg")!important;
+ background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important;background-attachment:fixed!important;
+}
+@media(max-width:720px){
+ #home.active{display:flex!important;flex-direction:column!important;align-items:center!important;gap:12px!important}
+ #home > .home-xp,#home > .home-coins{
+  position:relative!important;inset:auto!important;align-self:flex-start!important;
+  border:3px solid #24113f!important;outline:2px solid rgba(255,255,255,.9)!important;outline-offset:2px!important;
+  box-shadow:0 4px 0 #24113f,0 6px 0 rgba(255,255,255,.65)!important;border-radius:15px!important;
+ }
+ #home > .home-profile-card{display:flex!important;order:4!important;align-self:flex-start!important;margin:8px 0 0 0!important;width:min(100%,440px)!important}
+ #home > .home-xp{order:0!important}
+ #home > .home-coins{order:1!important}
+ #home > .home-center{order:2!important}
+}
