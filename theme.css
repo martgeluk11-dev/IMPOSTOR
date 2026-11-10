@@ -976,3 +976,10 @@ body{
   background-repeat:no-repeat!important;
   background-attachment:fixed!important;
 }
+
+/* Keep the guest reroll icon directly beside the username. */
+.profile-name-row{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;min-width:0;margin:8px 0}
+.profile-name-row h2{min-width:0;margin:0!important;font-size:25px;line-height:1.1;overflow-wrap:anywhere}
+.profile-reroll{flex:none;display:grid;place-items:center;width:27px;height:27px;padding:0!important;font:700 25px/1 'Fredoka',sans-serif!important;color:#6336a7;background:transparent;border:0;cursor:pointer}
+.profile-reroll:hover{transform:rotate(-35deg)}
+.profile-reroll:active{transform:rotate(-70deg) scale(.92)}
