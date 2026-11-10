@@ -753,3 +753,66 @@ body:before{content:none!important;display:none!important}
  #home .coin-icon{width:51px;height:51px;font-size:30px}
  #home .home-coins strong{font-size:23px}
 }
+
+
+/* FINAL HOME POSITIONING: profile rail on the left, game actions centered */
+@media(min-width:721px){
+  .app{width:min(100%,1440px);max-width:1440px;padding:28px 42px 42px}
+  #home.active{
+    display:grid!important;
+    grid-template-columns:minmax(250px,300px) minmax(500px, min(680px, 58vw));
+    grid-template-rows:minmax(0,1fr);
+    column-gap:clamp(54px,8vw,130px);
+    align-items:center;justify-content:center;
+    width:100%;min-height:calc(100svh - 70px);
+    padding:36px 0 48px!important;margin:0 auto;
+  }
+  #home .home-profile-card{
+    grid-column:1!important;grid-row:1!important;
+    display:flex!important;position:relative!important;
+    inset:auto!important;align-self:center;justify-self:stretch;
+    width:100%!important;max-width:300px!important;
+    margin:0!important;z-index:2;
+  }
+  #home .home-center{
+    grid-column:2!important;grid-row:1!important;
+    display:flex!important;position:relative!important;
+    align-self:center;justify-self:center;
+    width:100%!important;max-width:680px!important;min-width:0;
+    flex-direction:column;align-items:center;justify-content:center;
+    gap:clamp(24px,4vh,38px)!important;margin:0!important;padding:0!important;
+  }
+  #home .game-logo.game-logo-image{
+    width:min(100%,610px)!important;max-width:610px!important;
+    height:auto!important;min-height:0!important;aspect-ratio:760/310;
+    margin:-22px auto 0!important;padding:0!important;
+  }
+  #home .game-logo.game-logo-image img{
+    display:block;width:100%;height:100%;max-height:230px;object-fit:contain;
+  }
+  #home .home-menu{
+    display:grid!important;width:100%!important;max-width:560px!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:17px!important;padding:27px 30px!important;
+    margin:0 auto!important;
+  }
+  #home .menu-action{
+    display:flex!important;align-items:center;justify-content:center;
+    width:100%!important;min-height:82px!important;
+    font-size:clamp(30px,2.5vw,38px)!important;
+    line-height:1.1!important;white-space:nowrap;
+  }
+  #home .home-footnote{margin-top:0!important}
+  #home .home-xp{top:22px!important;right:25px!important;left:auto!important}
+  #home .home-coins{right:25px!important;left:auto!important;bottom:20px!important}
+}
+@media(min-width:721px) and (max-width:1050px){
+  .app{padding-left:22px;padding-right:22px}
+  #home.active{grid-template-columns:230px minmax(400px,1fr);column-gap:38px}
+  #home .home-profile-card{max-width:230px!important;padding:19px 14px!important}
+  #home .home-menu{max-width:470px!important;padding:22px!important}
+  #home .menu-action{min-height:70px!important;font-size:29px!important}
+}
+@media(max-width:720px){
+  #home .home-profile-card{display:none!important}
+}
