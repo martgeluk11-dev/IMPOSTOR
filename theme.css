@@ -910,3 +910,15 @@ body{background-size:100% 100%!important;background-position:center center!impor
   #home .xp-star{transform:translate(-22px,-50%)!important}
   #home .coin-icon{transform:translate(-22px,-50%)!important}
 }
+
+
+/* READABILITY FIX: soften the busy wallpaper behind all UI text */
+body{
+  background-image:
+    linear-gradient(rgba(240,237,255,.76),rgba(240,237,255,.82)),
+    url("https://i.postimg.cc/gkpGZZfm/Gemini-Generated-Image-yg4yx8yg4yx8yg4y.jpg")!important;
+  background-size:100% 100%!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+  background-attachment:fixed!important;
+}
