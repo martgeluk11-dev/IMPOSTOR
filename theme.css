@@ -816,3 +816,19 @@ body:before{content:none!important;display:none!important}
 @media(max-width:720px){
   #home .home-profile-card{display:none!important}
 }
+
+
+/* HOME GRID FIX: keep logo, menu and footnote together in the center column */
+@media(min-width:721px){
+ #home.active{display:grid!important;grid-template-columns:minmax(250px,300px) minmax(500px,680px)!important;grid-template-rows:1fr!important;column-gap:clamp(48px,7vw,100px)!important;align-items:center!important;justify-content:center!important;min-height:calc(100svh - 90px)!important;padding:38px 20px 45px!important}
+ #home > .home-profile-card{grid-column:1!important;grid-row:1!important;display:flex!important;position:relative!important;inset:auto!important;align-self:center!important;justify-self:stretch!important;width:100%!important;max-width:300px!important;margin:0!important}
+ #home > .home-center{grid-column:2!important;grid-row:1!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;align-self:center!important;justify-self:center!important;width:100%!important;max-width:680px!important;min-width:0!important;gap:clamp(16px,2.4vh,26px)!important;margin:0!important;padding:0!important}
+ #home .game-logo.game-logo-image{width:min(100%,560px)!important;max-width:560px!important;margin:-16px auto 0!important}
+ #home .home-menu{display:grid!important;width:100%!important;max-width:540px!important;box-sizing:border-box!important;gap:16px!important;padding:25px 28px!important;margin:0 auto!important}
+ #home .menu-action{width:100%!important;min-height:76px!important;font-size:clamp(29px,2.5vw,37px)!important;white-space:nowrap!important}
+ #home .home-footnote{margin:0!important}
+}
+@media(max-width:720px){
+ #home > .home-profile-card{display:flex!important;order:3!important;width:min(100%,440px)!important;max-width:440px!important;margin:0 auto!important}
+ #home > .home-center{order:2!important}
+}
