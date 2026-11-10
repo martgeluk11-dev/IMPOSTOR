@@ -561,3 +561,52 @@ body:before{content:none!important;display:none!important}
 .top .brand{font:800 20px 'Fredoka','DM Sans',sans-serif;letter-spacing:-.7px;color:#fff}
 .top .brand span{display:block;margin-top:2px;color:#c9a8ff;font:800 8px 'DM Sans',sans-serif;letter-spacing:2px}
 .top .brand-mark{flex:none}
+
+/* Mobile layout reset: deliberately simple, no nested desktop grid. */
+@media(max-width:720px){
+ html,body{width:100%;min-width:0;overflow-x:hidden}
+ body{min-height:100svh}
+ .app{box-sizing:border-box;width:100%;max-width:none;min-height:100svh;margin:0;padding:12px 15px 20px!important;overflow-x:hidden}
+ .top{display:flex!important;align-items:center;justify-content:space-between;gap:8px;margin:0 0 20px!important;min-width:0}
+ .brand-wrap{display:flex;align-items:center;min-width:0}
+ .brand-mark.game-logo-image{display:block!important;width:112px;height:49px;flex:none;margin:0 8px 0 0;background:none!important;border:0!important;box-shadow:none!important}
+ .brand-mark.game-logo-image img{display:block;width:100%;height:100%;object-fit:contain}
+ .top .brand{font-size:15px;line-height:1.05;letter-spacing:-.4px}
+ .top .brand span{font-size:7px;letter-spacing:1px}
+ .top-right{min-width:0;gap:5px}
+ #connection{display:none}
+ #home.active{display:flex!important;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:18px;width:100%;min-height:0;padding:0!important;margin:0!important}
+ #home .home-xp{position:relative;top:auto;left:auto;align-self:flex-start;width:min(230px,75vw);height:52px;margin:0 0 0 3px;padding:5px 12px 5px 52px;box-sizing:border-box}
+ #home .xp-star{left:-3px;width:61px;height:61px;font-size:26px}
+ #home .xp-track{margin-left:5px;gap:2px}
+ #home .xp-track strong{font-size:18px}
+ #home .home-coins{position:relative;left:auto;bottom:auto;align-self:flex-start;width:185px;min-width:0;height:53px;margin:0 0 0 4px;padding:5px 12px 5px 67px;box-sizing:border-box}
+ #home .coin-icon{width:60px;height:60px;font-size:35px}
+ #home .home-coins strong{font-size:28px}
+ #home .home-sidecard,#home .home-profile-card{display:none!important}
+ #home .home-center{display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;gap:18px;width:100%;max-width:none;min-width:0;margin:0;padding:0}
+ #home .game-logo{width:100%;max-width:400px;min-width:0;min-height:0;height:auto;margin:4px auto 0;padding:24px 0 0;box-sizing:border-box}
+ #home .logo-word{font-size:clamp(38px,10vw,58px);letter-spacing:-2.5px;line-height:1;white-space:nowrap;-webkit-text-stroke:2px #21103e}
+ #home .logo-eye{border-width:2px;box-shadow:inset 0 0 0 2px white}
+ #home .logo-doodle{border-width:2px;box-shadow:0 3px 0 #21103e}
+ #home .logo-knife{left:9%;top:0;width:44px;height:38px;font-size:21px}
+ #home .logo-question{left:calc(50% - 25px);top:-8px;width:50px;height:48px;font-size:34px}
+ #home .logo-chat{right:8%;top:4px;width:44px;height:36px;font-size:16px}
+ #home .logo-subtitle{margin-top:8px;font-size:7px;letter-spacing:2px}
+ #home .home-menu{display:grid;width:100%;max-width:440px;box-sizing:border-box;margin:0 auto;padding:19px 16px;gap:13px;border-width:5px;border-radius:16px}
+ #home .menu-action{box-sizing:border-box;width:100%;min-width:0;min-height:61px;padding:9px 12px!important;border-width:3px!important;border-radius:14px!important;font-size:clamp(23px,6.5vw,31px)!important;line-height:1.05;white-space:normal;box-shadow:0 4px 0 #a47bdf,0 6px 0 #34205a!important}
+ #home .menu-action span{display:none}
+ #home .home-footnote{flex-wrap:wrap;justify-content:center;white-space:normal;text-align:center;font-size:7px;letter-spacing:.7px;gap:5px;margin-bottom:3px}
+ body:has(.screen.active:not(#home)) .top{display:flex!important}
+ .page-top{display:flex;flex-wrap:wrap;gap:8px}
+ .page-heading{max-width:100%}
+ .settings-grid{grid-template-columns:minmax(0,1fr)!important}
+ .panel,.setup-form,.lobby-layout,.lobby-people,.lobby-invite{box-sizing:border-box;max-width:100%;min-width:0}
+}
+@media(max-width:380px){
+ .brand-mark.game-logo-image{width:92px;height:41px}
+ #home .home-center{gap:14px}
+ #home .logo-word{font-size:36px;letter-spacing:-2px}
+ #home .home-menu{padding:15px 12px;gap:11px}
+ #home .menu-action{min-height:56px;font-size:22px!important}
+}
