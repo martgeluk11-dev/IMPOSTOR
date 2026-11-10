@@ -87,8 +87,25 @@
     const signup=mode==="signup";
     openModal({kicker:"YOUR IMPOSTOR ACCOUNT",title:signup?"Choose a custom name":"Welcome back",description:signup?"Create an account to keep your custom username and progress across devices.":"Sign in to your existing IMPOSTOR account.",
       body:'<div class="modal-field"><label for="authUsername">CUSTOM USERNAME (OPTIONAL WHEN SIGNING IN)</label><input id="authUsername" maxlength="16" minlength="3" placeholder="YourName123" autocomplete="username"></div><div class="modal-field"><label for="authEmail">EMAIL</label><input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email"></div><div class="modal-field"><label for="authPassword">PASSWORD</label><input id="authPassword" type="password" minlength="8" placeholder="At least 8 characters" autocomplete="'+(signup?'new-password':'current-password')+'"></div>',
-      actions:[{label:signup?"Create account":"Sign in",run:()=>submitAuth(mode)},{label:"Cancel",secondary:true,run:closeModal}]});
+      actions:[{label:signup?"Create account":"Sign in",run:()=>submitAuth(mode)},{label:"Continue with Google",secondary:true,run:startGoogleAuth},{label:"Cancel",secondary:true,run:closeModal}]});
   }
+  async function startGoogleAuth() {
+    const buttons=$("modalActions").querySelectorAll("button");
+    buttons.forEach(b=>b.disabled=true);
+    try {
+      const user=accountUser || (await db.auth.getUser()).data.user;
+      const options={redirectTo:window.location.origin+window.location.pathname};
+      // Keep the current guest's progress by linking Google to its anonymous account.
+      const result=user?.is_anonymous
+        ? await db.auth.linkIdentity({provider:"google",options})
+        : await db.auth.signInWithOAuth({provider:"google",options});
+      if(result.error) throw result.error;
+    } catch(e) {
+      modalError(e.message||"Could not start Google sign-in.");
+      buttons.forEach(b=>b.disabled=false);
+    }
+  }
+
   async function submitAuth(mode) {
     const username=$("authUsername").value.trim();
     const email=$("authEmail").value.trim();
