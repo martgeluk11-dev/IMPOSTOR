@@ -86,7 +86,7 @@
   function authDialog(mode) {
     const signup=mode==="signup";
     openModal({kicker:"YOUR IMPOSTOR ACCOUNT",title:signup?"Choose a custom name":"Welcome back",description:signup?"Create an account to keep your custom username and progress across devices.":"Sign in to your existing IMPOSTOR account.",
-      body:'<div class="modal-field"><label for="authUsername">CUSTOM USERNAME</label><input id="authUsername" maxlength="16" minlength="3" placeholder="YourName123" autocomplete="username"></div><div class="modal-field"><label for="authEmail">EMAIL</label><input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email"></div><div class="modal-field"><label for="authPassword">PASSWORD</label><input id="authPassword" type="password" minlength="8" placeholder="At least 8 characters" autocomplete="'+(signup?'new-password':'current-password')+'"></div>',
+      body:'<div class="modal-field"><label for="authUsername">CUSTOM USERNAME (OPTIONAL WHEN SIGNING IN)</label><input id="authUsername" maxlength="16" minlength="3" placeholder="YourName123" autocomplete="username"></div><div class="modal-field"><label for="authEmail">EMAIL</label><input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email"></div><div class="modal-field"><label for="authPassword">PASSWORD</label><input id="authPassword" type="password" minlength="8" placeholder="At least 8 characters" autocomplete="'+(signup?'new-password':'current-password')+'"></div>',
       actions:[{label:signup?"Create account":"Sign in",run:()=>submitAuth(mode)},{label:"Cancel",secondary:true,run:closeModal}]});
   }
   async function submitAuth(mode) {
