@@ -957,18 +957,22 @@ body{
 }
 
 
-/* Larger XP level star — keep the existing background and layout */
-#home .xp-star{
-  width:98px!important;
-  height:98px!important;
-  font-size:43px!important;
-}
+/* Slightly larger XP level star, without overpowering the XP bar */
+#home .xp-star{width:90px!important;height:90px!important;font-size:39px!important}
 @media(max-width:1050px) and (min-width:721px){
-  #home .xp-star{width:84px!important;height:84px!important;font-size:37px!important}
+  #home .xp-star{width:78px!important;height:78px!important;font-size:34px!important}
 }
 @media(max-width:720px){
-  #home .xp-star{width:72px!important;height:72px!important;font-size:31px!important}
+  #home .xp-star{width:66px!important;height:66px!important;font-size:29px!important}
 }
 @media(max-width:380px){
-  #home .xp-star{width:65px!important;height:65px!important;font-size:28px!important}
+  #home .xp-star{width:60px!important;height:60px!important;font-size:26px!important}
+}
+
+/* Fit the complete wallpaper to the viewport instead of cropping it */
+body{
+  background-size:100vw 100vh!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+  background-attachment:fixed!important;
 }
