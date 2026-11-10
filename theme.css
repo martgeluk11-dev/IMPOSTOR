@@ -894,3 +894,19 @@ body{background-size:100% 100%!important;background-position:center center!impor
   #home .xp-star{left:-14px!important}
   #home .coin-icon{left:-12px!important}
 }
+
+
+/* Hard-position the stat icons themselves; transforms override earlier icon offsets */
+#home .home-xp,#home .home-coins{overflow:visible!important}
+#home .xp-star{
+  left:0!important;
+  transform:translate(-22px,-50%)!important;
+}
+#home .coin-icon{
+  left:0!important;
+  transform:translate(-22px,-50%)!important;
+}
+@media(max-width:720px){
+  #home .xp-star{transform:translate(-22px,-50%)!important}
+  #home .coin-icon{transform:translate(-22px,-50%)!important}
+}
