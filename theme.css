@@ -922,3 +922,76 @@ body{
   background-repeat:no-repeat!important;
   background-attachment:fixed!important;
 }
+
+
+/* CLEAR TEXT SURFACES FOR MATCHMAKING, SERVER BROWSER AND ROOM SETUP */
+#servers,
+#codeEntry,
+#createServer{
+  box-sizing:border-box;
+  width:100%;
+  margin:22px auto 0;
+  padding:22px 28px 28px;
+  border:2px solid rgba(255,255,255,.88);
+  border-radius:22px;
+  background:rgba(248,246,255,.91);
+  -webkit-backdrop-filter:blur(16px);
+  backdrop-filter:blur(16px);
+  box-shadow:0 12px 36px rgba(31,15,65,.16);
+}
+#servers .page-top,
+#codeEntry .page-top,
+#createServer .page-top{
+  padding-top:8px;
+}
+#servers .page-heading,
+#codeEntry .page-heading,
+#createServer .page-heading{
+  padding-top:27px;
+}
+#servers .section-title,
+#codeEntry .section-title,
+#createServer .section-title{
+  color:#21143f!important;
+  text-shadow:none!important;
+}
+#servers .sub,
+#codeEntry .sub,
+#createServer .sub{
+  color:#51476a!important;
+}
+#servers .eyebrow,
+#codeEntry .eyebrow,
+#createServer .eyebrow,
+#servers .back-link,
+#codeEntry .back-link,
+#createServer .back-link,
+#servers .field label,
+#codeEntry .field label,
+#createServer .field label,
+#servers .field-hint,
+#codeEntry .field-hint,
+#createServer .field-hint{
+  color:#554477!important;
+}
+#servers .server-toolbar,
+#servers .players,
+#servers .notice{
+  color:#352650!important;
+}
+#servers .server-count,
+#servers .empty-servers span,
+#servers .notice{
+  color:#5e5474!important;
+}
+@media(max-width:720px){
+  #servers,#codeEntry,#createServer{
+    width:100%;
+    margin:12px auto 0;
+    padding:15px 16px 20px;
+    border-radius:17px;
+  }
+  #servers .page-heading,
+  #codeEntry .page-heading,
+  #createServer .page-heading{padding-top:21px}
+}
