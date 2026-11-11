@@ -72,6 +72,7 @@
     const user = accountUser;
     const custom = user && !user.is_anonymous && user.user_metadata?.display_name;
     const shown = custom || guestName;
+    window.impostorAvatarId = selectedAvatar();
     if ($("profileDisplayName")) $("profileDisplayName").textContent = shown;
     if ($("profileDescription")) $("profileDescription").textContent = custom ? "Signed-in account · custom username" : "Guest account · progress saved on this device";
     if ($("profileAvatar")) $("profileAvatar").innerHTML = '<img src="' + avatarPath(selectedAvatar()) + '" alt="Profile picture">';
