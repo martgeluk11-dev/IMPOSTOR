@@ -23,17 +23,8 @@ begin
    select coalesce(jsonb_agg(to_jsonb(k)),'[]'::jsonb) into submitted_json from jsonb_object_keys(coalesce(gs->'hints','{}'::jsonb)) k
    where jsonb_typeof(gs->'hints'->k)='array';
  end if;
- if gs->>'phase'='hints' then
-   if coalesce(gs->'hints'->(uid::text)->((gs->>'round')::int-1),'null'::jsonb)<>'null'::jsonb then
-     select coalesce(jsonb_object_agg(k,coalesce((select jsonb_agg(jsonb_build_object('round',idx+1,'text',v)) from jsonb_array_elements(gs->'hints'->k) with ordinality a(v,idx) where v<>'null'::jsonb),'[]'::jsonb)),'{}'::jsonb)
-     into hints_json from jsonb_object_keys(gs->'hints') k;
-   else
-     hints_json:=jsonb_build_object(uid::text,coalesce((select jsonb_agg(jsonb_build_object('round',idx+1,'text',v)) from jsonb_array_elements(gs->'hints'->(uid::text)) with ordinality a(v,idx) where v<>'null'::jsonb),'[]'::jsonb));
-   end if;
- else
-   select coalesce(jsonb_object_agg(k,coalesce((select jsonb_agg(jsonb_build_object('round',idx+1,'text',v)) from jsonb_array_elements(gs->'hints'->k) with ordinality a(v,idx) where v<>'null'::jsonb),'[]'::jsonb)),'{}'::jsonb)
-   into hints_json from jsonb_object_keys(coalesce(gs->'hints','{}'::jsonb)) k;
- end if;
+ select coalesce(jsonb_object_agg(k,coalesce((select jsonb_agg(jsonb_build_object('round',idx+1,'text',v)) from jsonb_array_elements(gs->'hints'->k) with ordinality a(v,idx) where v<>'null'::jsonb),'[]'::jsonb)),'{}'::jsonb)
+ into hints_json from jsonb_object_keys(coalesce(gs->'hints','{}'::jsonb)) k;
  select coalesce(jsonb_agg(to_jsonb(k)),'[]'::jsonb) into votes_json from jsonb_object_keys(coalesce(gs->'votes','{}'::jsonb)) k;
  private_json:=jsonb_build_object('role',case when uid::text=gs->>'impostor' then 'impostor' else 'crew' end,
    'word',case when uid::text=gs->>'impostor' then null else gs->>'word' end,
