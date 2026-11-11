@@ -1,3 +1,6 @@
+-- Persist avatar IDs so every client sees the same player pictures.
+alter table public.impostor_players add column if not exists avatar_id int not null default 1 check (avatar_id between 1 and 8);
+
 -- IMPOSTOR coins + XP progression
 -- Run once in Supabase SQL Editor after supabase-schema.sql.
 
@@ -104,7 +107,7 @@ begin
  select * into r from public.impostor_rooms where id=p_room_id;
  if not found or not public.impostor_is_member(p_room_id) then raise exception 'Room not found'; end if;
  select count(*) into member_count from public.impostor_players where room_id=p_room_id;
- select coalesce(jsonb_agg(jsonb_build_object('id',user_id,'name',player_name,'ready',is_ready,'emoji',emoji) order by joined_at),'[]'::jsonb)
+ select coalesce(jsonb_agg(jsonb_build_object('id',user_id,'name',player_name,'ready',is_ready,'emoji',emoji,'avatar_id',avatar_id) order by joined_at),'[]'::jsonb)
  into player_json from public.impostor_players where room_id=p_room_id;
  gs:=r.game_state;
  if gs is null then
@@ -169,3 +172,14 @@ begin
   return public.impostor_snapshot(p_room_id);
 end;
 $$;
+
+
+-- Update the current player's avatar in the active room.
+create or replace function public.impostor_update_avatar(p_avatar_id int)
+returns void language plpgsql security definer set search_path=public
+as $$
+begin
+ if p_avatar_id not between 1 and 8 then raise exception 'Invalid avatar'; end if;
+ update public.impostor_players set avatar_id=p_avatar_id where user_id=auth.uid();
+end $$;
+grant execute on function public.impostor_update_avatar(int) to authenticated;
