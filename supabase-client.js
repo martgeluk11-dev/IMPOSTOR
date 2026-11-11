@@ -75,6 +75,8 @@
     if ($("profileDisplayName")) $("profileDisplayName").textContent = shown;
     if ($("profileDescription")) $("profileDescription").textContent = custom ? "Signed-in account · custom username" : "Guest account · progress saved on this device";
     if ($("profileAvatar")) $("profileAvatar").innerHTML = '<img src="' + avatarPath(selectedAvatar()) + '" alt="Profile picture">';
+    document.querySelectorAll(".profile-showcase-avatar").forEach(img => { img.src = avatarPath(selectedAvatar()); });
+    document.querySelectorAll(".profile-showcase-name").forEach(el => { el.textContent = shown; });
     if ($("signupBtn")) $("signupBtn").classList.toggle("hidden", !!custom);
     if ($("signinBtn")) $("signinBtn").classList.toggle("hidden", !!custom);
     if ($("rerollNameBtn")) $("rerollNameBtn").classList.toggle("hidden", !!custom);
