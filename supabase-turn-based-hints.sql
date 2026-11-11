@@ -47,7 +47,7 @@ begin
  select * into r from public.impostor_rooms where id=p_room_id for update;
  if not found or r.host_id<>uid then raise exception 'Only the host can start'; end if;
  select array_agg(user_id order by joined_at) into ids from public.impostor_players where room_id=p_room_id;
- if coalesce(array_length(ids,1),0)<2 then raise exception 'At least two players are required'; end if;
+ if coalesce(array_length(ids,1),0)<3 then raise exception 'At least three players are required'; end if;
  n:=1+floor(random()*array_length(words,1))::int;
  for i in 1..array_length(ids,1) loop
    hints_json:=jsonb_set(hints_json,array[ids[i]::text],(select jsonb_agg('null'::jsonb) from generate_series(1,r.total_rounds)),true);
@@ -125,3 +125,8 @@ grant execute on function public.impostor_snapshot(uuid) to authenticated;
 grant execute on function public.impostor_start_game(uuid) to authenticated;
 grant execute on function public.impostor_submit_hint(uuid,text) to authenticated;
 grant execute on function public.impostor_advance_timeout(uuid) to authenticated;
+
+
+-- Enforce the supported room size: 3 to 7 players.
+alter table public.impostor_rooms drop constraint if exists impostor_rooms_max_players_check;
+alter table public.impostor_rooms add constraint impostor_rooms_max_players_check check (max_players between 3 and 7);
