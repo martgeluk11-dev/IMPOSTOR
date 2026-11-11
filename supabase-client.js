@@ -275,11 +275,8 @@
       $("playersCount").textContent = state.players.length + " / " + (state.maxPlayers || 8) + " joined";
       $("lobbyPlayers").innerHTML = playerListHTML(state.players);
       $("startBtn").classList.toggle("hidden", !isHost);
-      $("startBtn").disabled = state.players.length < 2 || !state.players.every(p => p.ready);
+      $("startBtn").disabled = state.players.length < 2;
       $("startBtn").textContent = state.players.length < 2 ? "Waiting for players…" : "Start game (" + state.players.length + ")";
-      $("readyBtn").textContent = myReady ? "Ready ✓" : "I'm ready";
-      $("readyBtn").classList.toggle("primary", myReady);
-      $("readyBtn").classList.remove("hidden");
       $("lobbyError").textContent = "";
       return;
     }
@@ -541,7 +538,6 @@
   $("createServerBtn").onclick = () => setScreen("createServer");
   $("startServerBtn").onclick = createRoom;
   $("joinBtn").onclick = joinRoom;
-  $("readyBtn").onclick = setReady;
   $("startBtn").onclick = hostStart;
   $("submitHint").onclick = () => {
     const hint = $("hintInput").value.trim();
