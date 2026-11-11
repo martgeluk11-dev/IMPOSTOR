@@ -195,7 +195,7 @@ begin
       'totalRounds',r.total_rounds,'visibility',r.visibility,'maxPlayers',r.max_players,
       'deadline',gs->>'deadline','players',player_json,'hints',hints_json,
       'submitted',submitted_json,'votesSubmitted',votes_json,
-      'voteCount',jsonb_object_length(coalesce(gs->'votes','{}'::jsonb)),
+      'voteCount',(select count(*) from jsonb_object_keys(coalesce(gs->'votes','{}'::jsonb))),
       'judgeId',gs->'judgeId','tied',coalesce(gs->'tied','[]'::jsonb),
       'result',gs->'result'
     ),
