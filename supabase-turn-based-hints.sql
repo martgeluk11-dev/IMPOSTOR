@@ -128,5 +128,6 @@ grant execute on function public.impostor_advance_timeout(uuid) to authenticated
 
 
 -- Enforce the supported room size: 3 to 7 players.
+update public.impostor_rooms set max_players = 7 where max_players > 7;
 alter table public.impostor_rooms drop constraint if exists impostor_rooms_max_players_check;
 alter table public.impostor_rooms add constraint impostor_rooms_max_players_check check (max_players between 3 and 7);
