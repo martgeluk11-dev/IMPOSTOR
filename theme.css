@@ -1529,3 +1529,22 @@ body{background-size:cover!important;background-position:center center!important
  .customize-account-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
  .customize-account-button.secondary{background:#ffffff12;color:#fff;border:1px solid rgba(255,255,255,.2)}
 }
+
+
+/* Lobby text contrast: labels and section headings on the dark mobile backdrop */
+@media(max-width:760px),(max-height:700px) and (pointer:coarse){
+ #lobby .lobby-open-tag,
+ #lobby .players-heading strong,
+ #lobby .players-heading span,
+ #lobby .lobby-help,
+ #lobby .page-heading .eyebrow,
+ #lobby .page-heading .section-title,
+ #lobby .page-heading .sub,
+ #lobby .lobby-invite .eyebrow,
+ #lobby .code-label,
+ #lobby .lobby-settings span{
+   color:#fff!important;
+   text-shadow:0 1px 4px rgba(18,10,42,.9),0 0 9px rgba(18,10,42,.55)!important;
+ }
+ #lobby .players-heading strong{font-weight:800}
+}
