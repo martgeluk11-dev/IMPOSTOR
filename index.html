@@ -31,8 +31,19 @@
     <button class="menu-action quick-action" id="quickMatchBtn">Quick match <span>↗</span></button>
     <button class="menu-action" id="findServersBtn">Join server <span>↗</span></button>
     <button class="menu-action" id="createServerBtn">Create server <span>↗</span></button>
+    <button class="menu-action mobile-customize-action" id="customizePageBtn">Customize <span>↗</span></button>
   </nav>
   </div>
+</section>
+<section id="customize" class="screen customize-screen">
+<div class="page-top"><button class="back-link" id="customizeBackBtn">← MENU</button><span class="eyebrow">YOUR ACCOUNT</span></div>
+<div class="customize-heading"><div class="eyebrow">MAKE IT YOURS</div><h2 class="section-title">Customize.</h2><p class="sub">Your name, your avatar, your account.</p></div>
+<div class="customize-content">
+  <div class="customize-identity"><div class="customize-avatar-preview" id="customizeAvatarPreview"></div><div><strong id="customizeCurrentName">HappyHippo8291</strong><span id="customizeAccountStatus">Guest account · saved on this device</span></div></div>
+  <div class="customize-section"><label for="customizeUsername">USERNAME</label><div class="customize-name-row"><input id="customizeUsername" maxlength="16" autocomplete="nickname" placeholder="Your username"><button class="customize-save" id="saveUsernameBtn" type="button">SAVE</button></div><p class="customize-help" id="usernameHelp">3–16 characters · letters, numbers, spaces or _</p><div class="customize-error" id="usernameError" role="status"></div></div>
+  <div class="customize-section"><span class="customize-label">PROFILE PICTURE</span><button class="customize-avatar-open" id="customizePageAvatarBtn" type="button">Choose avatar <span>↗</span></button></div>
+  <div class="customize-section customize-account-section"><span class="customize-label">ACCOUNT</span><p id="customizeAccountText">Create an account to keep your profile and progress across devices.</p><div class="customize-account-actions"><button class="customize-account-button" id="customizeSignupBtn" type="button">Sign up</button><button class="customize-account-button secondary" id="customizeSigninBtn" type="button">Log in</button><button class="customize-account-button secondary hidden" id="customizeSignoutBtn" type="button">Log out</button></div></div>
+</div>
 </section>
 <section id="servers" class="screen">
 <div class="page-top"><button class="back-link" id="serversBackBtn">← MENU</button><button class="code-button" id="enterCodeBtn">ENTER CODE <span>↗</span></button></div>
