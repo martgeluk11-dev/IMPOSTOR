@@ -120,7 +120,7 @@ const setScreen=id=>{
   lobbyMusic.pause();
  }
 };
-const setConnection=s=>$("connection").textContent=s;
+const setConnection=s=>{const el=$("connection");if(el)el.textContent=s;};
 const err=(id,msg)=>$(id).textContent=msg||"";
 const randomCode=()=>Math.random().toString(36).slice(2,8).toUpperCase();
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -215,5 +215,5 @@ document.querySelectorAll(".visibility").forEach(b=>b.onclick=()=>{serverVisibil
 $("startServerBtn").onclick=()=>{err("createError","");createRoom()};
 $("joinBtn").onclick=joinRoom;$("readyBtn").onclick=()=>{ready=!ready;$("readyBtn").textContent=ready?"Ready ✓":"I'm ready";$("readyBtn").classList.toggle("primary",ready);if(isHost){players[playerId].ready=ready;renderLobby()}else sendClient({type:"ready",ready})};$("startBtn").onclick=hostStart;$("copyCode").onclick=()=>navigator.clipboard?.writeText(roomCode);$("leaveBtn").onclick=()=>{if(peer)peer.destroy();location.reload()};$("submitHint").onclick=()=>{const text=$("hintInput").value.trim();if(!text)return;if(isHost)hostSubmitHint(playerId,text);else sendClient({type:"hint",text});$("hintInput").value="";if(isHost)renderGame()};$("confirmVote").onclick=()=>{if(!selectedVote)return;if(isHost)hostVote(playerId,selectedVote);else sendClient({type:"vote",target:selectedVote});privateInfo.hasVoted=true;$("confirmVote").disabled=true;$("voteWait").textContent="Vote submitted. Waiting for everyone…"};$("confirmJudge").onclick=()=>{if(!selectedJudge)return;if(isHost)hostJudge(playerId,selectedJudge);else sendClient({type:"judge",target:selectedJudge})};$("submitGuess").onclick=()=>{const text=$("guessInput").value.trim();if(!text)return;if(isHost)hostGuess(playerId,text);else sendClient({type:"guess",text})};$("rematchBtn").onclick=()=>{if(isHost){Object.values(players).forEach(p=>p.ready=p.id===playerId);game=null;privateInfo=null;setScreen("lobby");renderLobby()}else sendClient({type:"rematch"})};$("backHomeBtn").onclick=()=>{if(peer)peer.destroy();location.reload()};$("joinCode").addEventListener("input",e=>e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,""));$("hintInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("submitHint").click()});$("guessInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("submitGuess").click()});
 </script>
-<script src="supabase-client.js?v=9"></script>
+<script src="supabase-client.js?v=10"></script>
 </body></html>
