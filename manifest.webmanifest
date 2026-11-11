@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "IMPOSTOR — The Word Bluff Game",
+  "short_name": "IMPOSTOR",
+  "description": "A multiplayer word bluff party game.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#17151f",
+  "theme_color": "#17151f",
+  "icons": [
+    {
+      "src": "impostor-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
