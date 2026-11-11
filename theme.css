@@ -1424,3 +1424,38 @@ body{
  #game .chalkboard-wrap{width:38%}
  #game .orbit-player{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-95px) rotate(calc(-1 * var(--angle)))}
 }
+
+
+/* Mobile touch spacing refinement — clearer separation, still zero-scroll */
+@media (max-width:760px), (max-height:700px) and (pointer:coarse) {
+  /* Give every interactive cluster breathing room */
+  .row{gap:12px!important}
+  .setup-form .btn,
+  .setup-form button{margin-top:5px}
+  .btn + .btn,
+  button + .btn,
+  .btn + button,
+  button + button{margin-left:4px}
+  .visibility-options{gap:11px!important}
+  .visibility-options .visibility{padding:10px!important}
+  .server-toolbar{gap:10px!important}
+  .server-toolbar .btn{margin:2px 0}
+  .lobby-invite{gap:8px 10px!important}
+  .lobby-invite .copy-button,
+  .lobby-invite .lobby-start{margin-top:3px}
+  .vote-list{gap:9px!important}
+  .vote-option{margin:1px}
+  .panel-actions,.modal-actions,.button-row,.actions-row{gap:10px!important}
+  .custom-modal button + button{margin:7px 0 0}
+  /* Home menu: make each action feel like a separate tap target */
+  #home .home-menu{gap:7px!important}
+  #home .menu-action{min-height:clamp(59px,10vh,73px);padding:10px 7px}
+  /* Game controls: separate input and submit action */
+  #game .game-action-panel .field{margin-bottom:9px!important}
+  #game #submitHint{margin-top:3px;min-height:43px}
+  #vote #confirmVote,#judge #confirmJudge,#guess #submitGuess{margin-top:8px;min-height:46px}
+}
+@media(max-width:390px) and (max-height:700px){
+  #home .home-menu{gap:5px!important;padding:8px 11px}
+  #home .menu-action{min-height:56px;padding:8px 6px}
+}
