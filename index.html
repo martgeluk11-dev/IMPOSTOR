@@ -45,7 +45,6 @@
 <section id="codeEntry" class="screen">
 <div class="page-top"><button class="back-link" id="codeBackBtn">← SERVER LIST</button><span class="eyebrow">ROOM INVITE</span></div>
 <div class="profile-showcase" aria-label="Your player profile"><div class="profile-showcase-ring"><img class="profile-showcase-avatar" src="assets/pfps/pfp-01.webp" alt="Your profile picture"></div><div class="profile-showcase-name">HappyHippo8291</div></div>
-<div class="page-heading"><h2 class="section-title">Have a code?</h2><p class="sub">Enter the six-character code your friend shared with you.</p></div>
 <div class="setup-form">
 <div class="field"><label for="joinCode">SERVER CODE</label><input id="joinCode" maxlength="8" placeholder="ABC123" autocomplete="off"></div>
 
@@ -141,7 +140,7 @@ function hostBroadcastStates(){for(const id of Object.keys(players)){if(id!==pla
 function renderHost(){renderLobby();if(game)renderGame()}
 function sendClient(msg){if(conn&&conn.open)conn.send(msg)}
 function updateHostView(){if(isHost){renderHost()}else sendClient({type:"requestState"})}
-function playerListHTML(list){return list.map(p=>'<div class="player"><div class="avatar">'+(p.emoji||"🙂")+'</div><div class="player-name">'+esc(p.name)+'</div>'+(p.id===playerId?'<span class="tag">YOU</span>':"")+(p.ready?'<span class="tag ready">READY</span>':'<span class="tag">WAITING</span>')+'</div>').join("")}
+function playerListHTML(list){return list.map(p=>{const own=p.id===playerId;const fallback=1+(Array.from(String(p.id||p.name||"player")).reduce((n,ch)=>n+ch.charCodeAt(0),0)%8);const avatar=own?(window.impostorAvatarId||Number(localStorage.getItem("impostor_guest_pfp"))||1):(Number(p.avatar_id)||fallback);return '<div class="player player-profile-card"><img class="player-profile-picture" src="assets/pfps/pfp-'+String(avatar).padStart(2,"0")+'.webp" alt=""><div class="player-name">'+esc(p.name)+'</div></div>'}).join("")}
 function renderLobby(){if(!isHost)return;const list=Object.values(players);$("roomCode").textContent=roomCode;renderLobbySettings({visibility:serverVisibility,maxPlayers:serverMaxPlayers,totalRounds:serverRounds});$("playersCount").textContent=list.length+" / "+serverMaxPlayers+" joined";$("lobbyPlayers").innerHTML=playerListHTML(list);$("startBtn").disabled=list.length<2||list.length>serverMaxPlayers||!list.every(p=>p.ready);$("startBtn").textContent=list.length<2?"Waiting for players…": "Start game ("+list.length+")"}
 function renderLobbySettings(state={}){const visibility=state.visibility||serverVisibility;const max=state.maxPlayers||serverMaxPlayers;const rounds=state.totalRounds||serverRounds;$("lobbySettings").innerHTML="<span>"+(visibility==="private"?"🔒 PRIVATE ROOM":"🌐 PUBLIC ROOM")+"</span><span>👥 UP TO "+max+" PLAYERS</span><span>🎯 "+rounds+" ROUNDS</span>";}
 function showSecret(){if(!privateInfo)return;const card=$("secretCard");card.classList.toggle("impostor",privateInfo.role==="impostor");$("secretLabel").textContent=privateInfo.role==="impostor"?"YOU ARE THE IMPOSTOR · CATEGORY":"YOUR SECRET WORD · CATEGORY: "+privateInfo.category.toUpperCase();$("secretWord").textContent=privateInfo.role==="impostor"?privateInfo.category:privateInfo.word}
