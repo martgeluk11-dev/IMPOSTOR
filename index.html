@@ -98,6 +98,18 @@ const lobbyMusicScreens=new Set(["home","servers","codeEntry","createServer","lo
 const lobbyMusic=new Audio("impostor-lobby.mp3");
 lobbyMusic.loop=true;
 lobbyMusic.preload="auto";
+// Browsers block audible autoplay until the first user interaction.
+let lobbyMusicUnlocked=false;
+const unlockLobbyMusic=()=>{
+ if(lobbyMusicUnlocked)return;
+ lobbyMusicUnlocked=true;
+ const activeScreen=document.querySelector(".screen.active")?.id;
+ if(lobbyMusicScreens.has(activeScreen))lobbyMusic.play().catch(()=>{});
+ document.removeEventListener("pointerdown",unlockLobbyMusic);
+ document.removeEventListener("keydown",unlockLobbyMusic);
+};
+document.addEventListener("pointerdown",unlockLobbyMusic);
+document.addEventListener("keydown",unlockLobbyMusic);
 const setScreen=id=>{
  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));
  if(lobbyMusicScreens.has(id)){
