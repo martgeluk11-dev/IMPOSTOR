@@ -1132,3 +1132,80 @@ body{
 
 /* Clean circular player pictures without a grey square backing. */
 .player-profile-picture{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:50%!important;overflow:hidden!important;}
+
+
+/* Animated IMPOSTOR hint arena */
+#game{width:min(100%,1120px);margin:auto;color:#fff}
+#game .game-topline{display:flex;justify-content:space-between;align-items:center;margin:4px 0 8px}
+#game .game-phase{display:grid;gap:5px}#game .game-phase .eyebrow{color:#ffe18a;text-shadow:0 2px 9px #160b32}
+#game .round{color:#fff;text-shadow:0 2px 8px #170d30}
+#game .game-clock{display:flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid #ffffff66;border-radius:14px;background:#24183feF;box-shadow:0 8px 24px #12092755}
+#game .clock-label{font-size:9px;letter-spacing:1.4px;font-weight:900;color:#f9dca2}
+#game .timer{font-size:25px;color:#fff}#game .timer.low{color:#ff8298;animation:clockPulse .8s infinite alternate}
+#game .game-progress{height:8px;margin:0 0 12px;background:#160c2b99;border:1px solid #ffffff35}
+#game .game-progress>div{background:linear-gradient(90deg,#ff72a8,#ffe07a);box-shadow:0 0 12px #ff83b8aa}
+#game .secret{width:max-content;max-width:100%;margin:0 auto 8px;padding:8px 17px;border-radius:12px;background:linear-gradient(110deg,#2e1e52ed,#4a2d68ed);border:1px solid #ffffff55;box-shadow:0 8px 22px #160b3244;text-align:center}
+#game .secret small{font-size:9px;letter-spacing:1.4px;color:#ffe5a4}#game .secret strong{font-size:18px;margin-top:1px;color:#fff}
+#game .game-stage{position:relative;width:min(100%,760px);height:clamp(390px,62vw,610px);margin:0 auto 14px;isolation:isolate}
+#game .player-orbit{position:absolute;inset:0;z-index:3;pointer-events:none}
+#game .orbit-player{position:absolute;left:50%;top:50%;width:clamp(82px,11vw,116px);min-height:112px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 5px;border:1px solid #ffffff80;border-radius:17px;background:linear-gradient(145deg,#fffef0f2,#e8dcf5ed);box-shadow:0 8px 24px #170b3b45,inset 0 1px #fff;transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-230px) rotate(calc(-1 * var(--angle)));transition:filter .3s,box-shadow .3s,border-color .3s}
+#game .orbit-player img{width:clamp(42px,6vw,62px);height:clamp(42px,6vw,62px);object-fit:cover;border-radius:50%;border:3px solid #fff;box-shadow:0 3px 10px #23134440}
+#game .orbit-player strong{max-width:100%;font:700 12px 'Fredoka',sans-serif;color:#24163c;overflow-wrap:anywhere;text-align:center;line-height:1.05}
+#game .orbit-player small{font:800 8px 'DM Sans',sans-serif;letter-spacing:.7px;color:#705c8c}
+#game .orbit-status{height:7px;font-size:12px;line-height:7px;color:#e84e9b}
+#game .orbit-player.is-current{border:2px solid #ffcf70;box-shadow:0 0 0 4px #ffcf7040,0 0 28px #ffbf6dcc,0 12px 28px #170b3b55;animation:playerBob 2s ease-in-out infinite}
+#game .orbit-player.is-current img{border-color:#ffcf70}#game .orbit-player.is-current small{color:#9b4a15}
+#game .orbit-player.is-you:not(.is-current){outline:2px solid #ad8aff;outline-offset:2px}
+#game .chalkboard-wrap{position:absolute;left:50%;top:50%;width:min(64%,490px);aspect-ratio:605/413;transform:translate(-50%,-50%);filter:drop-shadow(0 18px 20px #10071f88);z-index:1}
+#game .chalkboard-image{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+#game .chalkboard-content{position:absolute;left:9.1%;right:9.1%;top:10.5%;bottom:10.5%;display:flex;flex-direction:column;min-height:0;color:#fff}
+#game .chalkboard-heading{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 6px;color:#f7eecf;font:700 clamp(8px,1.3vw,12px) 'Space Grotesk';letter-spacing:2px;text-shadow:0 1px 5px #000}
+#game .chalkboard-heading span{height:1px;width:20px;background:#e9e1cc88}
+#game .hint-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:4px 9px;margin:0;padding:0 3px 3px;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#ffffff55 transparent}
+#game .chalk-hint{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:5px;align-items:baseline;min-width:0;padding:3px 4px;border-bottom:1px dashed #ffffff25;color:#f6f1df;text-shadow:0 1px 3px #000;font-family:'Fredoka',sans-serif}
+#game .chalk-hint-round{grid-row:1;grid-column:1;font-size:8px;color:#f5d88e}
+#game .chalk-hint-name{grid-row:1;grid-column:2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 8px 'DM Sans',sans-serif;color:#d6d0c4}
+#game .chalk-hint-text{grid-row:2;grid-column:1/3;overflow-wrap:anywhere;font-size:clamp(10px,1.5vw,14px);line-height:1.05}
+#game .chalk-hint-new{animation:chalkWrite .85s cubic-bezier(.16,.8,.25,1) both}
+#game .game-action-panel{position:relative;width:min(100%,560px);margin:0 auto;padding:20px 22px 22px;border:1px solid #ffffff55;border-radius:22px;background:linear-gradient(145deg,#302052ef,#1b1237ef);box-shadow:0 18px 42px #10071f55,inset 0 1px #ffffff25;backdrop-filter:blur(12px);text-align:center}
+#game .action-kicker{font-size:9px;font-weight:900;letter-spacing:2px;color:#ffd982}
+#game .action-heading .section-title,#game .game-action-panel .section-title{margin:5px 0 4px;font-size:25px;color:#fff}
+#game .game-action-panel .sub{margin:0 0 15px;color:#e3dced;font-size:13px}
+#game .game-action-panel .field{margin:0 0 12px;text-align:left}
+#game .game-action-panel .field label{color:#f9e8c2;font-size:10px;letter-spacing:1px}
+#game .game-action-panel .field input{height:53px;border:1px solid #ffffff5c;border-radius:13px;background:#160e2c;color:#fff;font-size:17px}
+#game .game-action-panel .field input:focus{border-color:#ffd47c;box-shadow:0 0 0 3px #ffd47c30}
+#game .game-action-panel .field input::placeholder{color:#aaa0bd}
+#game #submitHint{min-height:53px;border:1px solid #ffe6a1;border-radius:13px;background:linear-gradient(100deg,#ff83ae,#ffd875);color:#2b1744;font:800 15px 'Fredoka',sans-serif;letter-spacing:.8px;box-shadow:0 5px 0 #6c3b72,0 9px 20px #12082355}
+#game #submitHint:hover{filter:brightness(1.06);transform:translateY(-2px)}
+#game .thinking-bubble{display:none;position:absolute;right:22px;top:-43px;align-items:center;gap:8px;padding:9px 14px;border:1px solid #ffffff9c;border-radius:16px;background:linear-gradient(135deg,#fff8e9,#e8ddff);color:#39204d;box-shadow:0 8px 24px #12082355;font:800 9px 'DM Sans',sans-serif;letter-spacing:1.2px}
+#game .thinking-bubble:after{content:"?";display:inline-block;min-width:24px;text-align:left;font:800 20px 'Fredoka',sans-serif;color:#e64e9c;animation:questionLoop 1.25s steps(1,end) infinite}
+#game .thinking-bubble:before{content:"";position:absolute;right:23px;bottom:-7px;width:12px;height:12px;transform:rotate(45deg);background:#eee5f6;border-right:1px solid #ffffff9c;border-bottom:1px solid #ffffff9c}
+#game .thinking-bubble.active{display:flex;animation:bubblePop .25s ease-out both}
+#game #waiting{color:#f5e7ff;background:#ffffff12;border-radius:12px}
+@keyframes questionLoop{0%,18%{content:"?"}19%,42%{content:"??"}43%,68%{content:"???"}69%,84%{content:"??"}85%,100%{content:"?"}}
+@keyframes chalkWrite{0%{opacity:0;filter:blur(5px);transform:translateY(8px) rotate(-1deg);clip-path:inset(0 100% 0 0)}55%{opacity:1;filter:blur(0);clip-path:inset(0)}72%{transform:translateY(-2px) rotate(.5deg)}100%{opacity:1;filter:none;transform:none;clip-path:inset(0)}}
+@keyframes playerBob{0%,100%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-230px) rotate(calc(-1 * var(--angle)))}50%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-235px) rotate(calc(-1 * var(--angle)))}}
+@keyframes bubblePop{from{opacity:0;transform:translateY(8px) scale(.8)}to{opacity:1;transform:none}}
+@keyframes clockPulse{to{opacity:.65;transform:scale(1.05)}}
+@media(max-width:600px){
+ #game .game-stage{height:390px;width:100%;max-width:420px;margin-bottom:10px}
+ #game .chalkboard-wrap{width:67%}
+ #game .orbit-player{width:72px;min-height:86px;padding:5px 3px;border-radius:13px;transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-155px) rotate(calc(-1 * var(--angle)))}
+ #game .orbit-player img{width:40px;height:40px}
+ #game .orbit-player strong{font-size:10px}
+ #game .orbit-player small{font-size:6px;letter-spacing:.4px}
+ #game .orbit-player.is-current{animation:playerBobMobile 2s ease-in-out infinite}
+ #game .chalkboard-heading{font-size:7px;letter-spacing:1px;margin-bottom:3px;gap:4px}
+ #game .chalkboard-heading span{width:9px}
+ #game .hint-list{gap:2px 4px}
+ #game .chalk-hint{padding:2px 1px;column-gap:3px}
+ #game .chalk-hint-round,#game .chalk-hint-name{font-size:6px}
+ #game .chalk-hint-text{font-size:9px}
+ #game .game-action-panel{padding:17px 15px 18px;border-radius:18px}
+ #game .game-action-panel .section-title{font-size:22px}
+ #game .thinking-bubble{right:15px;top:-40px}
+}
+@keyframes playerBobMobile{0%,100%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-155px) rotate(calc(-1 * var(--angle)))}50%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-160px) rotate(calc(-1 * var(--angle)))}}
+@media(max-width:370px){#game .game-stage{height:350px}#game .chalkboard-wrap{width:70%}#game .orbit-player{width:65px;min-height:78px}#game .orbit-player img{width:36px;height:36px}#game .chalk-hint-text{font-size:8px}}
+@media(prefers-reduced-motion:reduce){#game *,#game *:before,#game *:after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
