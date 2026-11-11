@@ -83,6 +83,9 @@
     if ($("rerollNameBtn")) $("rerollNameBtn").classList.toggle("hidden", !!custom);
     if ($("customizeCurrentName")) $("customizeCurrentName").textContent = shown;
     if ($("customizeUsername") && document.activeElement !== $("customizeUsername")) $("customizeUsername").value = shown;
+    if ($("customizeUsernameEditor")) $("customizeUsernameEditor").classList.toggle("hidden", !custom);
+    if ($("customizeRerollBtn")) $("customizeRerollBtn").classList.toggle("hidden", !!custom);
+    if ($("usernameHelp")) $("usernameHelp").textContent = custom ? "3–16 characters · letters, numbers, spaces or _" : "Sign in to choose a custom username. Guests can reroll their generated name.";
     if ($("customizeAccountStatus")) $("customizeAccountStatus").textContent = custom ? "Signed-in account" : "Guest account · saved on this device";
     if ($("customizeAccountText")) $("customizeAccountText").textContent = custom ? "Your account is connected. Your progress is linked to this login." : "Create an account to keep your profile and progress across devices.";
     if ($("customizeAvatarPreview")) $("customizeAvatarPreview").innerHTML = '<img src="' + avatarPath(selectedAvatar()) + '" alt="Your avatar">';
@@ -118,6 +121,10 @@
     });
   }
   async function saveCustomUsername() {
+    if(!accountUser || accountUser.is_anonymous){
+      $("usernameError").textContent="Log in to set a custom username. You can reroll your guest name instead.";
+      return;
+    }
     const input=$("customizeUsername");
     const value=input.value.trim();
     const error=$("usernameError");
@@ -592,7 +599,9 @@
   }
 
   $("quickMatchBtn").onclick = quickMatch;
-  $("rerollNameBtn").onclick = () => { guestName=randomGuestName(); localStorage.setItem("impostor_guest_name",guestName); displayProfile(); };
+  const rerollGuestName = () => { guestName=randomGuestName(); localStorage.setItem("impostor_guest_name",guestName); displayProfile(); };
+  $("rerollNameBtn").onclick = rerollGuestName;
+  if($("customizeRerollBtn")) $("customizeRerollBtn").onclick = rerollGuestName;
   $("customizeAvatarBtn").onclick = customizeAvatar;
   $("customizePageBtn").onclick = () => { displayProfile(); setScreen("customize"); };
   $("customizeBackBtn").onclick = () => setScreen("home");
