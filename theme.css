@@ -1213,3 +1213,25 @@ body{
 @media(min-width:761px){#game .game-stage{height:clamp(560px,76vw,650px)}}
 @media(max-width:760px){#game .game-stage{height:410px}#game .orbit-player{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-155px) rotate(calc(-1 * var(--angle)))}#game .orbit-player.is-current{animation:playerBobMobile 2s ease-in-out infinite}}
 @media(max-width:370px){#game .game-stage{height:400px}}
+
+/* Final responsive spacing: keep the chalkboard clear inside the player ring */
+#game .chalkboard-wrap{width:min(44%,340px)}
+@media(max-width:760px){
+ #game .game-stage{height:410px}
+ #game .chalkboard-wrap{width:44%}
+ #game .orbit-player{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * clamp(155px,30vw,215px))) rotate(calc(-1 * var(--angle)))}
+ #game .orbit-player.is-current{animation:playerBobTablet 2s ease-in-out infinite}
+}
+@keyframes playerBobTablet{0%,100%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * clamp(155px,30vw,215px))) rotate(calc(-1 * var(--angle)))}50%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * clamp(155px,30vw,215px) - 5px)) rotate(calc(-1 * var(--angle)))}}
+@media(max-width:600px){
+ #game .chalkboard-wrap{width:44%}
+ #game .orbit-player{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * clamp(130px,36vw,155px))) rotate(calc(-1 * var(--angle)))}
+ #game .orbit-player.is-current{animation:playerBobPhone 2s ease-in-out infinite}
+}
+@keyframes playerBobPhone{0%,100%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * clamp(130px,36vw,155px))) rotate(calc(-1 * var(--angle)))}50%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * clamp(130px,36vw,155px) - 5px)) rotate(calc(-1 * var(--angle)))}}
+@media(max-width:370px){
+ #game .chalkboard-wrap{width:50%}
+ #game .orbit-player{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-110px) rotate(calc(-1 * var(--angle)))}
+ #game .orbit-player.is-current{animation:playerBobTiny 2s ease-in-out infinite}
+}
+@keyframes playerBobTiny{0%,100%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-110px) rotate(calc(-1 * var(--angle)))}50%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-115px) rotate(calc(-1 * var(--angle)))}}
