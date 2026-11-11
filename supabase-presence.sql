@@ -74,7 +74,7 @@ begin
     end if;
 
     if gs is not null and gs->>'phase' <> 'results'
-       and (stale_impostor or remaining_count < 2) then
+       and (stale_impostor or remaining_count < 3) then
       gs := jsonb_set(gs, '{phase}', '"results"'::jsonb, true);
       gs := jsonb_set(
         gs, '{result}',
