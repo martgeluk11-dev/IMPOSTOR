@@ -20,13 +20,14 @@ create table if not exists public.impostor_players (
   user_id uuid not null,
   player_name text not null check (char_length(player_name) between 1 and 16),
   emoji text not null default '🦊',
-  is_ready boolean not null default false,
+  is_ready boolean not null default true,
   joined_at timestamptz not null default now(),
   primary key (room_id,user_id)
 );
 
 create index if not exists impostor_rooms_directory_idx on public.impostor_rooms(status,visibility,created_at desc);
 create index if not exists impostor_players_room_idx on public.impostor_players(room_id,joined_at);
+alter table public.impostor_players alter column is_ready set default true;
 
 alter table public.impostor_rooms enable row level security;
 alter table public.impostor_players enable row level security;
@@ -80,7 +81,7 @@ begin
  return jsonb_build_object('roomId',r.id,'roomCode',r.code,'isHost',r.host_id=uid,
    'state',jsonb_build_object('phase',gs->>'phase','round',coalesce((gs->>'round')::int,1),'totalRounds',r.total_rounds,'visibility',r.visibility,'maxPlayers',r.max_players,
      'deadline',gs->>'deadline','players',player_json,'hints',hints_json,'submitted',submitted_json,'votesSubmitted',votes_json,
-     'voteCount',jsonb_object_length(coalesce(gs->'votes','{}'::jsonb)),'judgeId',gs->'judgeId','tied',coalesce(gs->'tied','[]'::jsonb),'result',gs->'result'),
+     'voteCount',(select count(*) from jsonb_object_keys(coalesce(gs->'votes','{}'::jsonb))),'judgeId',gs->'judgeId','tied',coalesce(gs->'tied','[]'::jsonb),'result',gs->'result'),
    'privateInfo',private_json);
 end $$;
 
@@ -109,7 +110,7 @@ begin
  if (select count(*) from public.impostor_players where room_id=r.id)>=r.max_players then raise exception 'Room is full'; end if;
  if exists(select 1 from public.impostor_players where room_id=r.id and user_id=uid) then return public.impostor_snapshot(r.id); end if;
  emoji_value:=(array['🦊','🐸','🐼','🐙','🦄','🐧','🐻','🦋'])[1+floor(random()*8)::int];
- insert into public.impostor_players(room_id,user_id,player_name,emoji) values(r.id,uid,left(trim(coalesce(p_name,'Player')),16),emoji_value);
+ insert into public.impostor_players(room_id,user_id,player_name,emoji,is_ready) values(r.id,uid,left(trim(coalesce(p_name,'Player')),16),emoji_value,true);
  return public.impostor_snapshot(r.id);
 end $$;
 
@@ -174,7 +175,6 @@ begin
  if not found or r.host_id<>uid then raise exception 'Only the host can start'; end if;
  select array_agg(user_id order by joined_at) into ids from public.impostor_players where room_id=p_room_id;
  if coalesce(array_length(ids,1),0)<2 then raise exception 'At least two players are required'; end if;
- if exists(select 1 from public.impostor_players where room_id=p_room_id and not is_ready) then raise exception 'Everyone must be ready'; end if;
  n:=1+floor(random()*array_length(words,1))::int;
  for i in 1..array_length(ids,1) loop
    hints_json:=jsonb_set(hints_json,array[ids[i]::text],(select jsonb_agg('null'::jsonb) from generate_series(1,r.total_rounds)),true);
@@ -232,7 +232,7 @@ begin
  if votes ? uid::text then raise exception 'You already voted'; end if;
  votes:=jsonb_set(votes,array[uid::text],to_jsonb(p_target::text),true); gs:=jsonb_set(gs,'{votes}',votes,true);
  select count(*) into total_players from public.impostor_players where room_id=p_room_id;
- if jsonb_object_length(votes)=total_players then
+ if (select count(*) from jsonb_object_keys(votes))=total_players then
    select max(cnt) into max_votes from (select count(*) cnt from jsonb_each_text(votes) group by value) q;
    select jsonb_agg(value::uuid) into tied_ids from (select value from jsonb_each_text(votes) group by value having count(*)=max_votes) q;
    if jsonb_array_length(tied_ids)>1 then
