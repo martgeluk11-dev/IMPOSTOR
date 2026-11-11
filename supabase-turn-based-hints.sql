@@ -39,7 +39,6 @@ begin
    'word',case when uid::text=gs->>'impostor' then null else gs->>'word' end,
    'category',gs->>'category',
    'hasSubmitted',coalesce(gs->'hints'->(uid::text)->((gs->>'round')::int-1),'null'::jsonb)<>'null'::jsonb,
-    'isTurn',uid::text=gs->>'currentPlayerId',
    'isTurn',uid::text=gs->>'currentPlayerId',
    'hasVoted',coalesce(gs->'votes'->(uid::text),'null'::jsonb)<>'null'::jsonb);
  return jsonb_build_object('roomId',r.id,'roomCode',r.code,'isHost',r.host_id=uid,
