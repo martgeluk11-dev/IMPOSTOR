@@ -1493,3 +1493,8 @@ body{
   #lobby .player-profile-card .player-name{color:#29204d!important}
   #createServer .visibility small{color:#51466f!important}
 }
+
+
+/* Wallpaper keeps its native proportions; crop naturally instead of stretching */
+body{background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important;background-attachment:fixed!important}
+@media(max-width:760px){body{background-size:cover!important;background-position:center center!important;background-attachment:scroll!important}}
