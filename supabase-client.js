@@ -81,6 +81,14 @@
     if ($("signupBtn")) $("signupBtn").classList.toggle("hidden", !!custom);
     if ($("signinBtn")) $("signinBtn").classList.toggle("hidden", !!custom);
     if ($("rerollNameBtn")) $("rerollNameBtn").classList.toggle("hidden", !!custom);
+    if ($("customizeCurrentName")) $("customizeCurrentName").textContent = shown;
+    if ($("customizeUsername") && document.activeElement !== $("customizeUsername")) $("customizeUsername").value = shown;
+    if ($("customizeAccountStatus")) $("customizeAccountStatus").textContent = custom ? "Signed-in account" : "Guest account · saved on this device";
+    if ($("customizeAccountText")) $("customizeAccountText").textContent = custom ? "Your account is connected. Your progress is linked to this login." : "Create an account to keep your profile and progress across devices.";
+    if ($("customizeAvatarPreview")) $("customizeAvatarPreview").innerHTML = '<img src="' + avatarPath(selectedAvatar()) + '" alt="Your avatar">';
+    if ($("customizeSignupBtn")) $("customizeSignupBtn").classList.toggle("hidden", !!custom);
+    if ($("customizeSigninBtn")) $("customizeSigninBtn").classList.toggle("hidden", !!custom);
+    if ($("customizeSignoutBtn")) $("("+"customizeSignoutBtn"+")").classList.toggle("hidden", !custom);
   }
   function customizeAvatar() {
     const current = selectedAvatar();
@@ -108,6 +116,48 @@
         displayProfile();
       };
     });
+  }
+  async function saveCustomUsername() {
+    const input=$("customizeUsername");
+    const value=input.value.trim();
+    const error=$("usernameError");
+    error.textContent="";
+    if(value.length<3||value.length>16||!/^[a-zA-Z0-9_ ]+$/.test(value)){
+      error.textContent="Use 3–16 letters, numbers, spaces or _.";
+      return;
+    }
+    const button=$("saveUsernameBtn");
+    button.disabled=true;
+    try {
+      if(accountUser && !accountUser.is_anonymous){
+        const {data,error:saveError}=await db.auth.updateUser({data:{display_name:value}});
+        if(saveError)throw saveError;
+        accountUser=data.user;
+      } else {
+        guestName=value;
+        localStorage.setItem("impostor_guest_name",guestName);
+        if(accountUser?.is_anonymous){
+          const {data,error:metaError}=await db.auth.updateUser({data:{display_name:value}});
+          if(metaError)console.warn("Guest name metadata could not be synced:",metaError.message);
+          else accountUser=data.user;
+        }
+      }
+      name=value;
+      displayProfile();
+      error.textContent="Username saved!";
+    } catch(e) {
+      error.textContent=e.message||"Could not save username.";
+    } finally { button.disabled=false; }
+  }
+  async function signOutToGuest() {
+    try {
+      const {error}=await db.auth.signOut();
+      if(error)throw error;
+      accountUser=null;
+      await ensureAuth();
+      displayProfile();
+      $("usernameError").textContent="Logged out. You're using a guest profile now.";
+    } catch(e) { $("usernameError").textContent=e.message||"Could not log out."; }
   }
   function openModal({title,description="",kicker="IMPOSTOR",body="",actions=[]}) {
     $("modalKicker").textContent=kicker; $("modalTitle").textContent=title;
@@ -544,6 +594,13 @@
   $("quickMatchBtn").onclick = quickMatch;
   $("rerollNameBtn").onclick = () => { guestName=randomGuestName(); localStorage.setItem("impostor_guest_name",guestName); displayProfile(); };
   $("customizeAvatarBtn").onclick = customizeAvatar;
+  $("customizePageBtn").onclick = () => { displayProfile(); setScreen("customize"); };
+  $("customizeBackBtn").onclick = () => setScreen("home");
+  $("saveUsernameBtn").onclick = saveCustomUsername;
+  $("customizePageAvatarBtn").onclick = customizeAvatar;
+  $("customizeSignupBtn").onclick = () => authDialog("signup");
+  $("customizeSigninBtn").onclick = () => authDialog("signin");
+  $("customizeSignoutBtn").onclick = signOutToGuest;
   $("signupBtn").onclick = () => authDialog("signup");
   $("signinBtn").onclick = () => authDialog("signin");
   $("findServersBtn").onclick = () => { setScreen("servers"); loadServerList(); };
