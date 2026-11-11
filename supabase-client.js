@@ -99,6 +99,10 @@
         } else {
           guestAvatar=id;
           localStorage.setItem("impostor_guest_pfp",String(id));
+          const {data,error}=await db.auth.updateUser({data:{avatar_id:id}});
+          if(error)throw error;
+          accountUser=data.user;
+          try{await rpc("impostor_update_avatar",{p_avatar_id:id});}catch(e){console.warn("Avatar sync will retry on next room entry:",e.message||e)}
         }
         $("modalBody").querySelectorAll(".avatar-choice").forEach(choice=>choice.classList.toggle("selected",choice===button));
         displayProfile();
@@ -180,7 +184,13 @@
     if (session) { accountUser=session.user; return session.user; }
     const { data, error } = await db.auth.signInAnonymously();
     if (error) throw new Error("Anonymous sign-in is disabled in Supabase. Enable it under Authentication → Sign In / Providers → Anonymous.");
-    accountUser=data.user; return data.user;
+    accountUser=data.user;
+    const avatar=Number(localStorage.getItem("impostor_guest_pfp"))||guestAvatar;
+    if(!Number.isInteger(Number(accountUser.user_metadata?.avatar_id))){
+      const updated=await db.auth.updateUser({data:{avatar_id:avatar}});
+      if(!updated.error)accountUser=updated.data.user;
+    }
+    return accountUser;
   }
 
   async function rpc(name, args = {}, signal = null) {
@@ -364,6 +374,7 @@
         p_visibility: serverVisibility
       });
       playerId = (await db.auth.getUser()).data.user.id;
+      try { await rpc("impostor_update_avatar", {p_avatar_id:Number(window.impostorAvatarId||localStorage.getItem("impostor_guest_pfp")||1)}); } catch(e) { console.warn("Could not sync profile picture:",e.message||e); }
       await enterRoom(payload);
     } catch (e) {
       showError("createError", e);
@@ -401,6 +412,7 @@
       if (expired) return;
       if (!payload?.state || !payload?.roomId) throw new Error("The server returned an invalid room response.");
       playerId = userData.user.id;
+      try { await rpc("impostor_update_avatar", {p_avatar_id:Number(window.impostorAvatarId||localStorage.getItem("impostor_guest_pfp")||1)}); } catch(e) { console.warn("Could not sync profile picture:",e.message||e); }
       if (payload.isHost && (payload.state.players || []).length === 1) {
         throw new Error("This browser/account is already hosting this room. Join from another browser profile or device.");
       }
