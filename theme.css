@@ -1209,3 +1209,7 @@ body{
 @keyframes playerBobMobile{0%,100%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-155px) rotate(calc(-1 * var(--angle)))}50%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-160px) rotate(calc(-1 * var(--angle)))}}
 @media(max-width:370px){#game .game-stage{height:350px}#game .chalkboard-wrap{width:70%}#game .orbit-player{width:65px;min-height:78px}#game .orbit-player img{width:36px;height:36px}#game .chalk-hint-text{font-size:8px}}
 @media(prefers-reduced-motion:reduce){#game *,#game *:before,#game *:after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+@media(min-width:761px){#game .game-stage{height:clamp(560px,76vw,650px)}}
+@media(max-width:760px){#game .game-stage{height:410px}#game .orbit-player{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-155px) rotate(calc(-1 * var(--angle)))}#game .orbit-player.is-current{animation:playerBobMobile 2s ease-in-out infinite}}
+@media(max-width:370px){#game .game-stage{height:400px}}
