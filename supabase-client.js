@@ -88,7 +88,7 @@
     if ($("customizeAvatarPreview")) $("customizeAvatarPreview").innerHTML = '<img src="' + avatarPath(selectedAvatar()) + '" alt="Your avatar">';
     if ($("customizeSignupBtn")) $("customizeSignupBtn").classList.toggle("hidden", !!custom);
     if ($("customizeSigninBtn")) $("customizeSigninBtn").classList.toggle("hidden", !!custom);
-    if ($("customizeSignoutBtn")) $("("+"customizeSignoutBtn"+")").classList.toggle("hidden", !custom);
+    if ($("customizeSignoutBtn")) $("customizeSignoutBtn").classList.toggle("hidden", !custom);
   }
   function customizeAvatar() {
     const current = selectedAvatar();
