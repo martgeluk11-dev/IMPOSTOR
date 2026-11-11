@@ -102,8 +102,8 @@
           const {data,error}=await db.auth.updateUser({data:{avatar_id:id}});
           if(error)throw error;
           accountUser=data.user;
-          try{await rpc("impostor_update_avatar",{p_avatar_id:id});}catch(e){console.warn("Avatar sync will retry on next room entry:",e.message||e)}
         }
+        try{await rpc("impostor_update_avatar",{p_avatar_id:id});}catch(e){console.warn("Avatar sync will retry on next room entry:",e.message||e)}
         $("modalBody").querySelectorAll(".avatar-choice").forEach(choice=>choice.classList.toggle("selected",choice===button));
         displayProfile();
       };
