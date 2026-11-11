@@ -390,13 +390,16 @@
 
     let expired = false;
     let timeoutId;
+    let stage = "checking your player session";
     const attempt = (async () => {
-      // Auth can hang too, so the timeout covers sign-in, user lookup AND the room RPC.
-      const user = await ensureAuth();
+      // Track each awaited step so a timeout tells us exactly where the backend stopped responding.
+      await ensureAuth();
       if (expired) return;
+      stage = "loading your player";
       const { data: userData, error: userError } = await db.auth.getUser();
       if (expired) return;
       if (userError || !userData?.user) throw userError || new Error("Your player session could not be loaded.");
+      stage = "joining the server";
       const payload = await rpc("impostor_join_room", { p_code: code, p_name: name });
       if (expired) return;
       if (!payload?.state || !payload?.roomId) throw new Error("The server returned an invalid room response.");
@@ -404,6 +407,7 @@
       if (payload.isHost && (payload.state.players || []).length === 1) {
         throw new Error("This browser/account is already hosting this room. Join from another browser profile or device.");
       }
+      stage = "opening the lobby";
       lastSnapshotSignature = null;
       await enterRoom(payload);
       err("homeError", "");
@@ -415,8 +419,14 @@
         new Promise((_, reject) => {
           timeoutId = setTimeout(() => {
             expired = true;
-            reject(new Error("Connection timed out. Supabase sign-in or the room server did not respond. Check your connection and try again."));
-          }, 12000);
+            const message = "Timed out while " + stage + ". Check the connection and try again.";
+            // Update the UI directly instead of relying only on Promise.race's catch handler.
+            err("homeError", message);
+            button.disabled = false;
+            setConnection("OFFLINE");
+            console.error("Join room watchdog:", message);
+            reject(new Error(message));
+          }, 10000);
         })
       ]);
     } catch (e) {
