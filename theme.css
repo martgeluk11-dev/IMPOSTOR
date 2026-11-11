@@ -983,3 +983,17 @@ body{
 .profile-reroll{flex:none;display:grid;place-items:center;width:27px;height:27px;padding:0!important;font:700 25px/1 'Fredoka',sans-serif!important;color:#6336a7;background:transparent;border:0;cursor:pointer}
 .profile-reroll:hover{transform:rotate(-35deg)}
 .profile-reroll:active{transform:rotate(-70deg) scale(.92)}
+
+
+/* Profile picture picker */
+.profile-avatar{overflow:hidden;padding:0}
+.profile-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.profile-customize-button{display:block;margin:9px auto 0;padding:9px 16px;border:3px solid #24113f;border-radius:11px;background:#fff;color:#24113f;font:800 13px 'Fredoka';box-shadow:0 4px 0 #24113f;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.profile-customize-button:hover{transform:translateY(-2px);box-shadow:0 6px 0 #24113f}
+.profile-customize-button:active{transform:translateY(2px);box-shadow:0 2px 0 #24113f}
+.avatar-picker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:8px 0 4px}
+.avatar-choice{display:block;aspect-ratio:1;border:3px solid #25113f;border-radius:15px;padding:3px;background:#fff;box-shadow:0 3px 0 #25113f;cursor:pointer;overflow:hidden}
+.avatar-choice img{display:block;width:100%;height:100%;object-fit:cover;border-radius:9px}
+.avatar-choice.selected{border-color:#e83bd4;box-shadow:0 0 0 3px #e83bd455,0 3px 0 #25113f}
+.avatar-choice:focus-visible{outline:3px solid #e83bd4;outline-offset:3px}
+@media(max-width:720px){.profile-customize-button{margin-top:7px}.avatar-picker{gap:9px}}
