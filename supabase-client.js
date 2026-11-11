@@ -382,35 +382,52 @@
       err("homeError", "Enter a 6-character room code.");
       return;
     }
-    $("joinBtn").disabled = true;
-    err("homeError", "");
+
+    const button = $("joinBtn");
+    button.disabled = true;
+    err("homeError", "Connecting to the room…");
     setConnection("CONNECTING…");
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
-    try {
-      // Make sure the anonymous/signed-in session exists before calling the room RPC.
-      await ensureAuth();
+
+    let expired = false;
+    let timeoutId;
+    const attempt = (async () => {
+      // Auth can hang too, so the timeout covers sign-in, user lookup AND the room RPC.
+      const user = await ensureAuth();
+      if (expired) return;
       const { data: userData, error: userError } = await db.auth.getUser();
+      if (expired) return;
       if (userError || !userData?.user) throw userError || new Error("Your player session could not be loaded.");
-      const payload = await rpc("impostor_join_room", { p_code: code, p_name: name }, controller.signal);
-      if (!payload?.state || !payload?.roomId) throw new Error("The server returned an invalid room response. Please try again.");
+      const payload = await rpc("impostor_join_room", { p_code: code, p_name: name });
+      if (expired) return;
+      if (!payload?.state || !payload?.roomId) throw new Error("The server returned an invalid room response.");
       playerId = userData.user.id;
-      // If the same Supabase account created this room, joining again won't create a second player.
       if (payload.isHost && (payload.state.players || []).length === 1) {
-        throw new Error("This browser/account is already the host of this room. Join from another browser profile or device to play as a second player.");
+        throw new Error("This browser/account is already hosting this room. Join from another browser profile or device.");
       }
       lastSnapshotSignature = null;
       await enterRoom(payload);
+      err("homeError", "");
+    })();
+
+    try {
+      await Promise.race([
+        attempt,
+        new Promise((_, reject) => {
+          timeoutId = setTimeout(() => {
+            expired = true;
+            reject(new Error("Connection timed out. Supabase sign-in or the room server did not respond. Check your connection and try again."));
+          }, 12000);
+        })
+      ]);
     } catch (e) {
-      const message = controller.signal.aborted
-        ? "The server did not respond within 15 seconds. Check your connection and try again."
-        : (e?.message || String(e || "Could not join this room."));
+      expired = true;
+      const message = e?.message || "Could not join this room.";
       err("homeError", message);
       console.error("Join room failed:", e);
-      $("joinBtn").disabled = false;
+      button.disabled = false;
       setConnection("OFFLINE");
     } finally {
-      clearTimeout(timeout);
+      clearTimeout(timeoutId);
     }
   }
 
