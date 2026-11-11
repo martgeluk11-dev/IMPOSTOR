@@ -7,7 +7,7 @@ create table if not exists public.impostor_rooms (
   code text not null unique,
   host_id uuid not null,
   visibility text not null check (visibility in ('public','private')),
-  max_players int not null check (max_players between 2 and 8),
+  max_players int not null check (max_players between 3 and 7),
   total_rounds int not null check (total_rounds between 3 and 10),
   status text not null default 'waiting' check (status in ('waiting','playing','finished')),
   game_state jsonb,
@@ -92,7 +92,7 @@ as $$
 declare uid uuid:=auth.uid(); rid uuid; code_value text; emoji_value text;
 begin
  if uid is null then raise exception 'Sign in required'; end if;
- if p_max_players not between 2 and 8 or p_rounds not between 3 and 10 or p_visibility not in ('public','private') then raise exception 'Invalid room settings'; end if;
+ if p_max_players not between 3 and 7 or p_rounds not between 3 and 10 or p_visibility not in ('public','private') then raise exception 'Invalid room settings'; end if;
  loop code_value:=upper(substr(replace(gen_random_uuid()::text,'-',''),1,6)); exit when not exists(select 1 from public.impostor_rooms where code=code_value); end loop;
  emoji_value:=(array['🦊','🐸','🐼','🐙','🦄','🐧','🐻','🦋'])[1+floor(random()*8)::int];
  insert into public.impostor_rooms(code,host_id,visibility,max_players,total_rounds) values(code_value,uid,p_visibility,p_max_players,p_rounds) returning id into rid;
@@ -175,7 +175,7 @@ begin
  select * into r from public.impostor_rooms where id=p_room_id for update;
  if not found or r.host_id<>uid then raise exception 'Only the host can start'; end if;
  select array_agg(user_id order by joined_at) into ids from public.impostor_players where room_id=p_room_id;
- if coalesce(array_length(ids,1),0)<2 then raise exception 'At least two players are required'; end if;
+ if coalesce(array_length(ids,1),0)<3 then raise exception 'At least three players are required'; end if;
  n:=1+floor(random()*array_length(words,1))::int;
  for i in 1..array_length(ids,1) loop
    hints_json:=jsonb_set(hints_json,array[ids[i]::text],(select jsonb_agg('null'::jsonb) from generate_series(1,r.total_rounds)),true);
@@ -328,7 +328,7 @@ begin
    select user_id into next_host from public.impostor_players where room_id=p_room_id order by joined_at limit 1;
    if next_host is null then delete from public.impostor_rooms where id=p_room_id;
    else update public.impostor_rooms set host_id=next_host where id=p_room_id; end if;
- elsif (select count(*) from public.impostor_players where room_id=p_room_id)<2 and gs is not null and gs->>'phase'<>'results' then
+ elsif (select count(*) from public.impostor_players where room_id=p_room_id)<3 and gs is not null and gs->>'phase'<>'results' then
    gs:=jsonb_set(gs,'{phase}','"results"'::jsonb,true);
    gs:=jsonb_set(gs,'{result}',jsonb_build_object('winner','crew','detail','Not enough players remained.','word',gs->>'word','impostor',gs->>'impostor'),true);
    update public.impostor_rooms set game_state=gs,status='finished' where id=p_room_id;
