@@ -183,8 +183,10 @@
     accountUser=data.user; return data.user;
   }
 
-  async function rpc(name, args = {}) {
-    const { data, error } = await db.rpc(name, args);
+  async function rpc(name, args = {}, signal = null) {
+    let request = db.rpc(name, args);
+    if (signal && typeof request.abortSignal === "function") request = request.abortSignal(signal);
+    const { data, error } = await request;
     if (error) throw error;
     return data;
   }
@@ -383,14 +385,32 @@
     $("joinBtn").disabled = true;
     err("homeError", "");
     setConnection("CONNECTING…");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     try {
-      const payload = await rpc("impostor_join_room", { p_code: code, p_name: name });
-      playerId = (await db.auth.getUser()).data.user.id;
+      // Make sure the anonymous/signed-in session exists before calling the room RPC.
+      await ensureAuth();
+      const { data: userData, error: userError } = await db.auth.getUser();
+      if (userError || !userData?.user) throw userError || new Error("Your player session could not be loaded.");
+      const payload = await rpc("impostor_join_room", { p_code: code, p_name: name }, controller.signal);
+      if (!payload?.state || !payload?.roomId) throw new Error("The server returned an invalid room response. Please try again.");
+      playerId = userData.user.id;
+      // If the same Supabase account created this room, joining again won't create a second player.
+      if (payload.isHost && (payload.state.players || []).length === 1) {
+        throw new Error("This browser/account is already the host of this room. Join from another browser profile or device to play as a second player.");
+      }
+      lastSnapshotSignature = null;
       await enterRoom(payload);
     } catch (e) {
-      showError("homeError", e);
+      const message = controller.signal.aborted
+        ? "The server did not respond within 15 seconds. Check your connection and try again."
+        : (e?.message || String(e || "Could not join this room."));
+      err("homeError", message);
+      console.error("Join room failed:", e);
       $("joinBtn").disabled = false;
       setConnection("OFFLINE");
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
