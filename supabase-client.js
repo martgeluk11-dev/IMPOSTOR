@@ -56,19 +56,51 @@
   const randomGuestName = () => ADJECTIVES[Math.floor(Math.random()*ADJECTIVES.length)] + ANIMALS[Math.floor(Math.random()*ANIMALS.length)] + (1000+Math.floor(Math.random()*9000));
   let guestName = localStorage.getItem("impostor_guest_name") || randomGuestName();
   localStorage.setItem("impostor_guest_name", guestName);
+  let guestAvatar = Number(localStorage.getItem("impostor_guest_pfp"));
+  if (!Number.isInteger(guestAvatar) || guestAvatar < 1 || guestAvatar > 8) {
+    guestAvatar = 1 + Math.floor(Math.random() * 8);
+    localStorage.setItem("impostor_guest_pfp", String(guestAvatar));
+  }
   let accountUser = null;
   let modalSubmit = null;
+  const avatarPath = id => "assets/pfps/pfp-" + String(id).padStart(2,"0") + ".webp";
+  function selectedAvatar() {
+    const saved = Number(accountUser?.user_metadata?.avatar_id);
+    return Number.isInteger(saved) && saved >= 1 && saved <= 8 ? saved : guestAvatar;
+  }
   function displayProfile() {
     const user = accountUser;
     const custom = user && !user.is_anonymous && user.user_metadata?.display_name;
     const shown = custom || guestName;
     if ($("profileDisplayName")) $("profileDisplayName").textContent = shown;
     if ($("profileDescription")) $("profileDescription").textContent = custom ? "Signed-in account · custom username" : "Guest account · progress saved on this device";
-    if ($("profileStatusText")) $("profileStatusText").textContent = custom ? "ACCOUNT CONNECTED" : "GUEST PROFILE";
-    if ($("profileAvatar")) $("profileAvatar").textContent = shown.slice(0,1).toUpperCase();
+    if ($("profileAvatar")) $("profileAvatar").innerHTML = '<img src="' + avatarPath(selectedAvatar()) + '" alt="Profile picture">';
     if ($("signupBtn")) $("signupBtn").classList.toggle("hidden", !!custom);
     if ($("signinBtn")) $("signinBtn").classList.toggle("hidden", !!custom);
     if ($("rerollNameBtn")) $("rerollNameBtn").classList.toggle("hidden", !!custom);
+  }
+  function customizeAvatar() {
+    const current = selectedAvatar();
+    const choices = Array.from({length:8},(_,i)=>{
+      const id=i+1;
+      return '<button type="button" class="avatar-choice'+(id===current?' selected':'')+'" data-avatar-id="'+id+'" aria-label="Choose profile picture '+id+'"><img src="'+avatarPath(id)+'" alt="Profile picture '+id+'"></button>';
+    }).join("");
+    openModal({kicker:"MAKE IT YOURS",title:"Choose your profile picture",description:"Pick one of the eight avatars.",body:'<div class="avatar-picker">'+choices+'</div>',actions:[{label:"Done",run:closeModal}]});
+    $("modalBody").querySelectorAll("[data-avatar-id]").forEach(button=>{
+      button.onclick=async()=>{
+        const id=Number(button.dataset.avatarId);
+        if(accountUser && !accountUser.is_anonymous){
+          const {data,error}=await db.auth.updateUser({data:{avatar_id:id}});
+          if(error){modalError(error.message);return;}
+          accountUser=data.user;
+        } else {
+          guestAvatar=id;
+          localStorage.setItem("impostor_guest_pfp",String(id));
+        }
+        $("modalBody").querySelectorAll(".avatar-choice").forEach(choice=>choice.classList.toggle("selected",choice===button));
+        displayProfile();
+      };
+    });
   }
   function openModal({title,description="",kicker="IMPOSTOR",body="",actions=[]}) {
     $("modalKicker").textContent=kicker; $("modalTitle").textContent=title;
@@ -452,6 +484,7 @@
 
   $("quickMatchBtn").onclick = quickMatch;
   $("rerollNameBtn").onclick = () => { guestName=randomGuestName(); localStorage.setItem("impostor_guest_name",guestName); displayProfile(); };
+  $("customizeAvatarBtn").onclick = customizeAvatar;
   $("signupBtn").onclick = () => authDialog("signup");
   $("signinBtn").onclick = () => authDialog("signin");
   $("findServersBtn").onclick = () => { setScreen("servers"); loadServerList(); };
