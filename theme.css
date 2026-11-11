@@ -1129,3 +1129,6 @@ body{
 .player-profile-card .player-name{flex:none!important;width:100%!important;overflow:visible!important;text-overflow:clip!important;white-space:normal!important;text-align:center!important;font-size:16px!important;font-weight:800!important;color:#211344!important;overflow-wrap:anywhere!important}
 .player-profile-card .tag{display:none!important}
 @media(max-width:480px){.players:has(.player-profile-card){grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}.player-profile-picture{width:88px!important;height:88px!important}}
+
+/* Clean circular player pictures without a grey square backing. */
+.player-profile-picture{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:50%!important;overflow:hidden!important;}
