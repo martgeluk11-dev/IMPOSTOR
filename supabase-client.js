@@ -275,8 +275,8 @@
       $("playersCount").textContent = state.players.length + " / " + (state.maxPlayers || 8) + " joined";
       $("lobbyPlayers").innerHTML = playerListHTML(state.players);
       $("startBtn").classList.toggle("hidden", !isHost);
-      $("startBtn").disabled = state.players.length < 2;
-      $("startBtn").textContent = state.players.length < 2 ? "Waiting for players…" : "Start game (" + state.players.length + ")";
+      $("startBtn").disabled = state.players.length < 3;
+      $("startBtn").textContent = state.players.length < 3 ? "Need at least 3 players…" : "Start game (" + state.players.length + ")";
       $("lobbyError").textContent = "";
       return;
     }
