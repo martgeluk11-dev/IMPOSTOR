@@ -1459,3 +1459,37 @@ body{
   #home .home-menu{gap:5px!important;padding:8px 11px}
   #home .menu-action{min-height:56px;padding:8px 6px}
 }
+
+
+/* Readability pass: muted labels and helper copy must stand out from the backdrop */
+@media (max-width:760px), (max-height:700px) and (pointer:coarse) {
+  .sub,.notice,.back-link,.server-count,.empty-servers span,
+  .field label,.field-hint,.setup-summary,.players-heading span,
+  .lobby-help,.lobby-settings span,.code-label,.small,.footer,
+  .menu-heading,.menu-foot,.menu-index,.action-copy small,
+  .home-intro p,.home-meta span {
+    color:#fff!important;
+    text-shadow:0 1px 4px rgba(18,10,42,.85),0 0 8px rgba(18,10,42,.45);
+  }
+  .btn.ghost{color:#fff!important;text-shadow:0 1px 4px rgba(18,10,42,.85)}
+  .field input::placeholder{color:#77718e!important;text-shadow:none}
+  /* Text on intentionally light cards stays dark for readable contrast */
+  #lobby .lobby-invite,
+  #lobby .lobby-invite *,
+  #lobby .player-profile-card,
+  #lobby .player-profile-card *,
+  #createServer .visibility,
+  #createServer .visibility *,
+  #vote .panel,#vote .panel *,
+  #judge .panel,#judge .panel *,
+  #guess .panel,#guess .panel *,
+  #results .panel,#results .panel *,
+  .custom-modal,.custom-modal * {
+    text-shadow:none;
+  }
+  #lobby .lobby-invite .eyebrow{color:#6552dc!important}
+  #lobby .lobby-invite .code-label,
+  #lobby .lobby-invite .lobby-settings span{color:#51466f!important}
+  #lobby .player-profile-card .player-name{color:#29204d!important}
+  #createServer .visibility small{color:#51466f!important}
+}
