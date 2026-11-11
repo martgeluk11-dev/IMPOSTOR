@@ -228,7 +228,7 @@ begin
  if gs->>'phase'<>'hints' or (gs->>'deadline')::timestamptz>now() then return public.impostor_snapshot(p_room_id); end if;
  turn_order:=gs->'turnOrder'; turn_idx:=coalesce((gs->>'turnIndex')::int,0); current_id:=gs->>'currentPlayerId';
  if current_id is not null and coalesce(gs->'hints'->current_id->(round_no-1),'null'::jsonb)='null'::jsonb then
-   gs:=jsonb_set(gs,array['hints',current_id,(round_no-1)::text],to_jsonb('(skipped)'),true);
+   gs:=jsonb_set(gs,array['hints',current_id,(round_no-1)::text],to_jsonb('(skipped)'::text),true);
  end if;
  next_idx:=turn_idx+1;
  if next_idx<jsonb_array_length(turn_order) then
