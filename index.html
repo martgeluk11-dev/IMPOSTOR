@@ -94,7 +94,7 @@ const WORDS=[
 const EMOJIS=["🦊","🐸","🐼","🐙","🦄","🐧","🐻","🦋"];
 let peer=null,conn=null,isHost=false,playerId="",roomCode="",name="",ready=false,hostConnections={},players={},game=null,privateInfo=null,selectedVote="",selectedJudge="",serverVisibility="public",serverMaxPlayers=6,serverRounds=5;
 let hostTimer=null,remaining=60,localVoteSent=false;
-const lobbyMusicScreens=new Set(["servers","codeEntry","createServer","lobby"]);
+const lobbyMusicScreens=new Set(["home","servers","codeEntry","createServer","lobby"]);
 const lobbyMusic=new Audio("impostor-lobby.mp3");
 lobbyMusic.loop=true;
 lobbyMusic.preload="auto";
