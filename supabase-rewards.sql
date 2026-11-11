@@ -185,6 +185,7 @@ begin
     'word',case when uid::text=gs->>'impostor' then null else gs->>'word' end,
     'category',gs->>'category',
     'hasSubmitted',coalesce(gs->'hints'->(uid::text)->((gs->>'round')::int-1),'null'::jsonb)<>'null'::jsonb,
+    'isTurn',uid::text=gs->>'currentPlayerId',
     'hasVoted',coalesce(gs->'votes'->(uid::text),'null'::jsonb)<>'null'::jsonb
   );
 
@@ -193,7 +194,7 @@ begin
     'state',jsonb_build_object(
       'phase',gs->>'phase','round',coalesce((gs->>'round')::int,1),
       'totalRounds',r.total_rounds,'visibility',r.visibility,'maxPlayers',r.max_players,
-      'deadline',gs->>'deadline','players',player_json,'hints',hints_json,
+      'deadline',gs->>'deadline','turnPlayerId',gs->>'currentPlayerId','turnIndex',coalesce((gs->>'turnIndex')::int,0),'players',player_json,'hints',hints_json,
       'submitted',submitted_json,'votesSubmitted',votes_json,
       'voteCount',(select count(*) from jsonb_object_keys(coalesce(gs->'votes','{}'::jsonb))),
       'judgeId',gs->'judgeId','tied',coalesce(gs->'tied','[]'::jsonb),
