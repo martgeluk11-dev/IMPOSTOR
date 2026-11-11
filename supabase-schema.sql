@@ -20,6 +20,7 @@ create table if not exists public.impostor_players (
   user_id uuid not null,
   player_name text not null check (char_length(player_name) between 1 and 16),
   emoji text not null default '🦊',
+  avatar_id int not null default 1 check (avatar_id between 1 and 8),
   is_ready boolean not null default true,
   joined_at timestamptz not null default now(),
   primary key (room_id,user_id)
@@ -28,6 +29,7 @@ create table if not exists public.impostor_players (
 create index if not exists impostor_rooms_directory_idx on public.impostor_rooms(status,visibility,created_at desc);
 create index if not exists impostor_players_room_idx on public.impostor_players(room_id,joined_at);
 alter table public.impostor_players alter column is_ready set default true;
+alter table public.impostor_players add column if not exists avatar_id int not null default 1 check (avatar_id between 1 and 8);
 
 alter table public.impostor_rooms enable row level security;
 alter table public.impostor_players enable row level security;
@@ -47,7 +49,7 @@ begin
  select * into r from public.impostor_rooms where id=p_room_id;
  if not found or not public.impostor_is_member(p_room_id) then raise exception 'Room not found'; end if;
  select count(*) into member_count from public.impostor_players where room_id=p_room_id;
- select coalesce(jsonb_agg(jsonb_build_object('id',user_id,'name',player_name,'ready',is_ready,'emoji',emoji) order by joined_at),'[]'::jsonb)
+ select coalesce(jsonb_agg(jsonb_build_object('id',user_id,'name',player_name,'ready',is_ready,'emoji',emoji,'avatar_id',avatar_id) order by joined_at),'[]'::jsonb)
  into player_json from public.impostor_players where room_id=p_room_id;
  gs:=r.game_state;
  if gs is null then
