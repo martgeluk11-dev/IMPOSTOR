@@ -1683,3 +1683,13 @@ body{background-size:cover!important;background-position:center center!important
  .menu-music-toggle{top:calc(env(safe-area-inset-top,0px) + 12px);right:calc(env(safe-area-inset-right,0px) + 12px);width:48px;height:48px;min-height:48px}
  .menu-music-toggle .music-toggle-icon{font-size:28px}
 }
+
+
+/* Desktop: keep the app and every game screen inside the viewport without page scrolling. */
+@media (min-width:721px){
+ html,body{height:100%;min-height:0;overflow:hidden!important}
+ body{height:100dvh;min-height:0;overscroll-behavior:none}
+ .app{height:100dvh;min-height:0;overflow:hidden}
+ .screen.active{max-height:calc(100dvh - 112px);overflow:hidden}
+ #home.active{min-height:0;max-height:calc(100dvh - 112px)}
+}
