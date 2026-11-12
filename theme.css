@@ -1662,3 +1662,22 @@ body{background-size:cover!important;background-position:center center!important
   background:rgba(12,8,25,.82)!important;
   border-color:rgba(255,255,255,.72)!important;
 }
+
+
+/* Minimal custom menu music toggle — never show native player controls */
+.menu-music-toggle{
+ position:fixed;z-index:120;top:calc(env(safe-area-inset-top,0px) + 17px);right:calc(env(safe-area-inset-right,0px) + 18px);
+ display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:42px;padding:0 14px;
+ border:1px solid rgba(255,255,255,.2);border-radius:999px;
+ color:#fff;background:rgba(24,20,38,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+ box-shadow:0 8px 24px rgba(0,0,0,.24);font:800 9px/1 'DM Sans',sans-serif;letter-spacing:1.1px;
+ cursor:pointer;transition:background .18s,border-color .18s,transform .18s;
+}
+.menu-music-toggle:hover{background:rgba(49,40,69,.94);border-color:rgba(255,255,255,.42);transform:translateY(-1px)}
+.menu-music-toggle:active{transform:scale(.96)}
+.menu-music-toggle .music-toggle-icon{font:700 19px/1 'Space Grotesk',sans-serif;color:#ffd166}
+.menu-music-toggle[aria-pressed="true"] .music-toggle-icon{color:#aaa5b8}
+.menu-music-toggle[aria-pressed="true"]{background:rgba(15,13,23,.88);border-color:rgba(255,255,255,.13);color:#c4bfd0}
+@media(max-width:760px){
+ .menu-music-toggle{top:calc(env(safe-area-inset-top,0px) + 12px);right:calc(env(safe-area-inset-right,0px) + 12px);min-height:39px;padding:0 12px;gap:7px}
+}
