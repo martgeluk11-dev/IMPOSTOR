@@ -1,4 +1,4 @@
--- IMPOSTOR: sequential hint turns (60 seconds per player)
+-- IMPOSTOR: sequential hint turns (30 seconds per player)
 -- Run this entire file once in Supabase SQL Editor after updating the site.
 
 create or replace function public.impostor_snapshot(p_room_id uuid)
@@ -52,7 +52,7 @@ begin
  for i in 1..array_length(ids,1) loop
    hints_json:=jsonb_set(hints_json,array[ids[i]::text],(select jsonb_agg('null'::jsonb) from generate_series(1,r.total_rounds)),true);
  end loop;
- update public.impostor_rooms set status='playing',game_state=jsonb_build_object('phase','hints','round',1,'word',words[n],'category',cats[n],'impostor',ids[1+floor(random()*array_length(ids,1))::int]::text,'hints',hints_json,'votes','{}'::jsonb,'turnOrder',to_jsonb(ids),'turnIndex',0,'currentPlayerId',ids[1]::text,'deadline',now()+interval '60 seconds','judgeId',null,'tied','[]'::jsonb,'result',null),updated_at=now() where id=p_room_id;
+ update public.impostor_rooms set status='playing',game_state=jsonb_build_object('phase','hints','round',1,'word',words[n],'category',cats[n],'impostor',ids[1+floor(random()*array_length(ids,1))::int]::text,'hints',hints_json,'votes','{}'::jsonb,'turnOrder',to_jsonb(ids),'turnIndex',0,'currentPlayerId',ids[1]::text,'deadline',now()+interval '30 seconds','judgeId',null,'tied','[]'::jsonb,'result',null),updated_at=now() where id=p_room_id;
  update public.impostor_players set is_ready=false where room_id=p_room_id;
  return public.impostor_snapshot(p_room_id);
 end $$;
@@ -74,12 +74,12 @@ begin
  if next_idx<jsonb_array_length(turn_order) then
    gs:=jsonb_set(gs,'{turnIndex}',to_jsonb(next_idx),true);
    gs:=jsonb_set(gs,'{currentPlayerId}',turn_order->next_idx,true);
-   gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '60 seconds'),true);
+   gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '30 seconds'),true);
  elsif round_no<r.total_rounds then
    gs:=jsonb_set(gs,'{round}',to_jsonb(round_no+1),true);
    gs:=jsonb_set(gs,'{turnIndex}','0'::jsonb,true);
    gs:=jsonb_set(gs,'{currentPlayerId}',turn_order->0,true);
-   gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '60 seconds'),true);
+   gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '30 seconds'),true);
  else
    gs:=jsonb_set(gs,'{phase}','"vote"'::jsonb,true);
    gs:=jsonb_set(gs,'{deadline}','null'::jsonb,true);
@@ -106,12 +106,12 @@ begin
  if next_idx<jsonb_array_length(turn_order) then
    gs:=jsonb_set(gs,'{turnIndex}',to_jsonb(next_idx),true);
    gs:=jsonb_set(gs,'{currentPlayerId}',turn_order->next_idx,true);
-   gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '60 seconds'),true);
+   gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '30 seconds'),true);
  elsif round_no<r.total_rounds then
    gs:=jsonb_set(gs,'{round}',to_jsonb(round_no+1),true);
    gs:=jsonb_set(gs,'{turnIndex}','0'::jsonb,true);
    gs:=jsonb_set(gs,'{currentPlayerId}',turn_order->0,true);
-   gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '60 seconds'),true);
+   gs:=jsonb_set(gs,'{deadline}',to_jsonb(now()+interval '30 seconds'),true);
  else
    gs:=jsonb_set(gs,'{phase}','"vote"'::jsonb,true);
    gs:=jsonb_set(gs,'{deadline}','null'::jsonb,true);
