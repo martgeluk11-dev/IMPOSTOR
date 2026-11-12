@@ -120,15 +120,28 @@ const lobbyMusic=new Audio("impostor-lobby.mp3");
 lobbyMusic.loop=true;
 lobbyMusic.preload="auto";
 lobbyMusic.volume=.42;
-// Attempt audible autoplay as soon as the tab opens. Browsers may block it
-// until a gesture; retry when the tab becomes visible.
+// Start as soon as the page opens. If the browser blocks audible autoplay,
+// retry directly inside the first real user gesture (Chrome/Safari policy).
 const tryLobbyAutoplay=()=>{
  const activeScreen=document.querySelector(".screen.active")?.id;
- if(lobbyMusicScreens.has(activeScreen)&&lobbyMusic.paused)lobbyMusic.play().catch(()=>{});
+ if(lobbyMusicScreens.has(activeScreen)&&lobbyMusic.paused){
+  const attempt=lobbyMusic.play();
+  if(attempt&&typeof attempt.catch==="function")attempt.catch(()=>{});
+ }
+};
+const unlockLobbyMusic=()=>{
+ const activeScreen=document.querySelector(".screen.active")?.id;
+ if(lobbyMusicScreens.has(activeScreen)&&lobbyMusic.paused){
+  const attempt=lobbyMusic.play();
+  if(attempt&&typeof attempt.catch==="function")attempt.catch(()=>{});
+ }
 };
 window.addEventListener("DOMContentLoaded",tryLobbyAutoplay,{once:true});
 window.addEventListener("pageshow",tryLobbyAutoplay);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")tryLobbyAutoplay();});
+["pointerdown","touchstart","keydown"].forEach(type=>{
+ document.addEventListener(type,unlockLobbyMusic,{capture:true,passive:true});
+});
 const setScreen=id=>{
  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));
  if(lobbyMusicScreens.has(id)){
@@ -294,7 +307,7 @@ document.querySelectorAll(".visibility").forEach(b=>b.onclick=()=>{serverVisibil
 $("startServerBtn").onclick=()=>{err("createError","");createRoom()};
 $("joinBtn").onclick=joinRoom;$("startBtn").onclick=hostStart;$("copyCode").onclick=()=>navigator.clipboard?.writeText(roomCode);$("leaveBtn").onclick=()=>{if(peer)peer.destroy();location.reload()};$("submitHint").onclick=()=>{const text=$("hintInput").value.trim();if(!text)return;if(isHost)hostSubmitHint(playerId,text);else sendClient({type:"hint",text});$("hintInput").value="";if(isHost)renderGame()};$("confirmVote").onclick=()=>{if(!selectedVote)return;if(isHost)hostVote(playerId,selectedVote);else sendClient({type:"vote",target:selectedVote});privateInfo.hasVoted=true;$("confirmVote").disabled=true;$("voteWait").textContent="Vote submitted. Waiting for everyone…"};$("confirmJudge").onclick=()=>{if(!selectedJudge)return;if(isHost)hostJudge(playerId,selectedJudge);else sendClient({type:"judge",target:selectedJudge})};$("submitGuess").onclick=()=>{const text=$("guessInput").value.trim();if(!text)return;if(isHost)hostGuess(playerId,text);else sendClient({type:"guess",text})};$("rematchBtn").onclick=()=>{if(isHost){Object.values(players).forEach(p=>p.ready=true);game=null;privateInfo=null;setScreen("lobby");renderLobby()}else sendClient({type:"rematch"})};$("backHomeBtn").onclick=()=>{if(peer)peer.destroy();location.reload()};$("joinCode").addEventListener("input",e=>e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,""));$("hintInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("submitHint").click()});$("guessInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("submitGuess").click()});
 </script>
-<script src="supabase-client.js?v=15"></script>
+<script src="supabase-client.js?v=16"></script>
 <script>
 (()=>{const root=document.documentElement;const set=()=>root.style.setProperty("--app-height",(window.visualViewport?.height||window.innerHeight)+"px");set();window.addEventListener("resize",set,{passive:true});window.visualViewport?.addEventListener("resize",set,{passive:true});window.visualViewport?.addEventListener("scroll",set,{passive:true});document.addEventListener("focusin",e=>{if(e.target.matches("input,textarea"))document.body.classList.add("keyboard-open")});document.addEventListener("focusout",()=>setTimeout(()=>{if(!document.activeElement?.matches("input,textarea"))document.body.classList.remove("keyboard-open")},100));})();
 </script>
