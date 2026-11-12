@@ -309,6 +309,7 @@
           if(metaError)throw metaError;
         }
         accountUser=(await db.auth.getUser()).data.user;
+        await ensurePlayerUsername();
         displayProfile(); await loadMyProfile(); closeModal();
       }
     } catch(e) { modalError(e.message||"Could not complete account action."); buttons.forEach(b=>b.disabled=false); }
