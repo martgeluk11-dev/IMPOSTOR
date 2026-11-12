@@ -353,3 +353,32 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
  #home #customizePageBtn{display:flex!important}
 }
 @media(max-width:390px){#home .home-menu{padding:8px!important;gap:5px!important}#home .menu-action{min-height:50px!important}}
+
+/* Replace legacy high-priority wallpaper and component overrides with this theme. */
+html,body{background:var(--bg)!important;color:var(--text)!important}
+body{background-image:radial-gradient(ellipse at 50% -24%,#49336d 0,transparent 54%),radial-gradient(ellipse at 100% 100%,#211536 0,transparent 38%),linear-gradient(145deg,#100e19,#100e19)!important;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;background-attachment:fixed!important}
+body:before{display:none!important;content:none!important;background:none!important}
+#servers .setup-form,#codeEntry .setup-form,#createServer .setup-form{width:min(100%,620px)!important;max-width:620px!important;margin:18px auto 0!important;padding:18px!important;border:1px solid var(--line)!important;border-radius:16px!important;background:#191625!important;box-shadow:none!important;backdrop-filter:none!important}
+#servers .section-title,#codeEntry .section-title,#createServer .section-title{color:var(--text)!important;text-shadow:none!important}
+#servers .sub,#codeEntry .sub,#createServer .sub,#servers .eyebrow,#codeEntry .eyebrow,#createServer .eyebrow,#servers .back-link,#codeEntry .back-link,#createServer .back-link,#servers .field label,#codeEntry .field label,#createServer .field label,#servers .field-hint,#codeEntry .field-hint,#createServer .field-hint,#servers .server-count,#servers .empty-servers span,#servers .notice{color:var(--muted)!important;text-shadow:none!important}
+#servers .empty-servers{border:1px solid var(--line)!important;border-radius:15px!important;background:#191625!important;box-shadow:none!important;backdrop-filter:none!important}
+#servers .empty-servers strong{color:var(--text)!important;text-shadow:none!important}
+#servers .server-toolbar,#servers .page-top{border-color:var(--line)!important}
+#servers .server-filter{color:var(--accent)!important;text-shadow:none!important}
+#createServer .visibility-options .visibility{min-height:66px!important;padding:11px!important;border:1px solid var(--line)!important;border-radius:11px!important;background:#ffffff06!important;color:var(--text)!important;box-shadow:none!important}
+#createServer .visibility-options .visibility.active{border-color:var(--accent)!important;background:var(--accent-soft)!important;color:#d9ceff!important;box-shadow:none!important}
+#createServer .visibility-options .visibility small{color:var(--muted)!important}
+#createServer .field-hint,#createServer .setup-summary{color:var(--muted)!important;text-shadow:none!important}
+#codeEntry .field input,#createServer .field input,#codeEntry .field select,#createServer .field select{min-height:48px!important;border:1px solid var(--line)!important;border-radius:11px!important;background:#100e19!important;color:var(--text)!important;padding:12px 14px!important;box-shadow:none!important}
+#codeEntry #joinBtn,#createServer .create-submit{min-height:49px!important;border:1px solid var(--accent)!important;border-radius:11px!important;background:var(--accent)!important;color:#171123!important;font:800 12px 'DM Sans'!important;letter-spacing:.5px!important;box-shadow:none!important}
+.player.player-profile-card{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-height:88px!important;padding:10px 7px!important;margin:0!important;border:1px solid var(--line)!important;border-radius:13px!important;background:#191625!important;box-shadow:none!important;text-align:center!important}
+.player-profile-picture{width:46px!important;height:46px!important;object-fit:cover!important;border:0!important;border-radius:50%!important;background:transparent!important;box-shadow:none!important}
+.player-profile-card .player-name{flex:none!important;width:100%!important;overflow:visible!important;text-overflow:clip!important;white-space:normal!important;text-align:center!important;font-size:11px!important;font-weight:700!important;color:var(--text)!important;overflow-wrap:anywhere!important}
+#lobby .player.player-profile-card{min-height:90px!important;gap:7px!important;padding:9px 5px!important;border:1px solid var(--line)!important;border-radius:12px!important;background:#191625!important}
+#lobby .player-profile-card .player-name{color:var(--text)!important}
+#lobby #roomCode,#lobby .room-code{color:var(--gold)!important;-webkit-text-fill-color:var(--gold)!important;text-shadow:none!important;background:#100e19!important;border-color:#66558c!important}
+@media(max-width:760px){
+ #lobby #lobbyPlayers{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:minmax(84px,1fr)!important;gap:7px!important;align-content:start!important;max-height:none!important;overflow:visible!important}
+ #lobby .player.player-profile-card{min-height:82px!important}
+ #lobby .player-profile-picture{width:38px!important;height:38px!important}
+}
