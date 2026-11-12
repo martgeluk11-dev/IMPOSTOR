@@ -77,7 +77,7 @@ begin
  select coalesce(jsonb_agg(to_jsonb(k)),'[]'::jsonb) into votes_json from jsonb_object_keys(coalesce(gs->'votes','{}'::jsonb)) k;
  private_json:=jsonb_build_object('role',case when uid::text=gs->>'impostor' then 'impostor' else 'crew' end,
    'word',case when uid::text=gs->>'impostor' then null else gs->>'word' end,
-   'category',gs->>'category',
+   'category',case when uid::text=gs->>'impostor' then null else gs->>'category' end,
    'hasSubmitted',coalesce(gs->'hints'->(uid::text)->((gs->>'round')::int-1),'null'::jsonb)<>'null'::jsonb,
    'isTurn',uid::text=gs->>'currentPlayerId',
    'hasVoted',coalesce(gs->'votes'->(uid::text),'null'::jsonb)<>'null'::jsonb);
