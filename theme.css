@@ -1631,3 +1631,23 @@ body{background-size:cover!important;background-position:center center!important
 @media(max-width:760px){#game .hint-reveal-board{width:min(46%,230px);max-width:230px}#game .hint-reveal-word{font-size:clamp(18px,5vw,30px);padding:2px 5px}#game .orbit-thinking{top:-28px;min-width:38px;height:27px;padding:2px 7px;border-radius:12px 12px 12px 6px}#game .orbit-thinking-mark:after{font-size:18px;min-width:23px}#game .orbit-thinking:before{width:7px;height:7px;bottom:-8px}#game .orbit-thinking:after{width:4px;height:4px;bottom:-14px}}
 @media(max-width:390px){#game .hint-reveal-board{width:48%}#game .hint-reveal-word{font-size:clamp(16px,5vw,23px)}}
 @media(prefers-reduced-motion:reduce){#game .player-orbit,#game .orbit-player{transition:none!important}#game .orbit-player.is-current,#game .orbit-thinking,#game .hint-reveal-board.board-reveal,#game .hint-reveal-board.board-reveal .hint-reveal-word,#game .chalk-spark{animation:none!important}#game .hint-reveal-board.is-visible{opacity:1;visibility:visible}}
+
+
+/* FINAL lobby contrast fix — apply on desktop and mobile */
+#lobby .page-heading .section-title,
+#lobby .page-heading .sub,
+#lobby .page-heading .eyebrow,
+#lobby .lobby-open-tag,
+#lobby .players-heading strong,
+#lobby .players-heading span,
+#lobby .lobby-help,
+#lobby .lobby-invite .eyebrow,
+#lobby .lobby-invite .code-label,
+#lobby .lobby-settings span{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  text-shadow:0 1px 4px rgba(12,7,28,.95),0 0 10px rgba(12,7,28,.65)!important;
+  opacity:1!important;
+}
+#lobby .players-heading strong{font-weight:800!important}
+#lobby .lobby-open-tag{font-weight:800!important;letter-spacing:.8px}
