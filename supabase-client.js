@@ -93,6 +93,56 @@
     if ($("customizeSigninBtn")) $("customizeSigninBtn").classList.toggle("hidden", !!custom);
     if ($("customizeSignoutBtn")) $("customizeSignoutBtn").classList.toggle("hidden", !custom);
   }
+  function openProfileCustomize() {
+    const signedIn=!!(accountUser && !accountUser.is_anonymous);
+    const shown=signedIn ? (accountUser.user_metadata?.display_name||guestName) : guestName;
+    const avatars=Array.from({length:8},(_,i)=>{const id=i+1;return '<button type="button" class="avatar-choice'+(id===selectedAvatar()?' selected':'')+'" data-profile-avatar="'+id+'" aria-label="Choose avatar '+id+'"><img src="'+avatarPath(id)+'" alt=""></button>';}).join("");
+    const body='<div class="profile-customize-modal">'+
+      '<div class="profile-customize-identity"><img src="'+avatarPath(selectedAvatar())+'" alt="" id="profileModalAvatar"><div><strong id="profileModalName">'+shown.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))+'</strong><span>'+(signedIn?'Signed-in account':'Guest account · saved on this device')+'</span></div></div>'+
+      '<section class="profile-modal-section"><label>PROFILE PICTURE</label><div class="avatar-picker">'+avatars+'</div></section>'+
+      '<section class="profile-modal-section"><label>USERNAME</label>'+
+      (signedIn?'<div class="profile-modal-name-row"><input id="profileModalUsername" maxlength="16" value="'+shown.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'" placeholder="Your username"><button type="button" id="profileModalSave">SAVE</button></div><p>3–16 characters · letters, numbers, spaces or _</p>':'<button type="button" id="profileModalReroll">↻ REROLL USERNAME</button><p>Log in to choose your own custom username.</p>')+
+      '<div class="profile-modal-error" id="profileModalError" role="status"></div></section>'+
+      '<section class="profile-modal-section"><label>ACCOUNT</label><p>'+(signedIn?'Your progress is linked to this account.':'Create an account to keep your profile and progress across devices.')+'</p><div class="profile-modal-account">'+(signedIn?'<button type="button" class="secondary" id="profileModalLogout">LOG OUT</button>':'<button type="button" id="profileModalSignup">SIGN UP</button><button type="button" class="secondary" id="profileModalSignin">LOG IN</button>')+'</div></section></div>';
+    openModal({kicker:"YOUR PROFILE",title:"Customize profile",description:"Change your avatar and username.",body,actions:[{label:"Done",run:closeModal}]});
+    $("modalBody").querySelectorAll("[data-profile-avatar]").forEach(button=>button.onclick=async()=>{
+      const id=Number(button.dataset.profileAvatar);
+      try {
+        if(accountUser && !accountUser.is_anonymous){
+          const {data,error}=await db.auth.updateUser({data:{avatar_id:id}});
+          if(error)throw error;
+          accountUser=data.user;
+        } else {
+          guestAvatar=id;localStorage.setItem("impostor_guest_pfp",String(id));
+          const {data,error}=await db.auth.updateUser({data:{avatar_id:id}});
+          if(error)throw error;
+          accountUser=data.user;
+        }
+        try{await rpc("impostor_update_avatar",{p_avatar_id:id});}catch(e){console.warn("Avatar sync will retry:",e.message||e)}
+        $("modalBody").querySelectorAll("[data-profile-avatar]").forEach(x=>x.classList.toggle("selected",x===button));
+        $("profileModalAvatar").src=avatarPath(id);displayProfile();
+      } catch(e){$("profileModalError").textContent=e.message||"Could not update avatar.";}
+    });
+    if($("profileModalReroll")) $("profileModalReroll").onclick=()=>{
+      guestName=randomGuestName();localStorage.setItem("impostor_guest_name",guestName);
+      $("profileModalName").textContent=guestName;displayProfile();
+    };
+    if($("profileModalSave")) $("profileModalSave").onclick=async()=>{
+      const input=$("profileModalUsername"),value=input.value.trim(),error=$("profileModalError"),button=$("profileModalSave");
+      if(!accountUser||accountUser.is_anonymous){error.textContent="Log in to set a custom username.";return;}
+      if(value.length<3||value.length>16||!/^[a-zA-Z0-9_ ]+$/.test(value)){error.textContent="Use 3–16 letters, numbers, spaces or _.";return;}
+      button.disabled=true;error.textContent="";
+      try{const {data,error:e}=await db.auth.updateUser({data:{display_name:value}});if(e)throw e;accountUser=data.user;name=value;displayProfile();$("profileModalName").textContent=value;error.textContent="Username saved!";}
+      catch(e){error.textContent=e.message||"Could not save username.";}
+      finally{button.disabled=false;}
+    };
+    if($("profileModalSignup")) $("profileModalSignup").onclick=()=>authDialog("signup");
+    if($("profileModalSignin")) $("profileModalSignin").onclick=()=>authDialog("signin");
+    if($("profileModalLogout")) $("profileModalLogout").onclick=async()=>{
+      try{const {error}=await db.auth.signOut();if(error)throw error;accountUser=null;await ensureAuth();displayProfile();openProfileCustomize();}
+      catch(e){$("profileModalError").textContent=e.message||"Could not log out.";}
+    };
+  }
   function customizeAvatar() {
     const current = selectedAvatar();
     const choices = Array.from({length:8},(_,i)=>{
@@ -602,7 +652,7 @@
   const rerollGuestName = () => { guestName=randomGuestName(); localStorage.setItem("impostor_guest_name",guestName); displayProfile(); };
   $("rerollNameBtn").onclick = rerollGuestName;
   if($("customizeRerollBtn")) $("customizeRerollBtn").onclick = rerollGuestName;
-  $("customizeAvatarBtn").onclick = () => { displayProfile(); setScreen("customize"); };
+  $("customizeAvatarBtn").onclick = openProfileCustomize;
   $("customizePageBtn").onclick = () => { displayProfile(); setScreen("customize"); };
   $("customizeBackBtn").onclick = () => setScreen("home");
   $("saveUsernameBtn").onclick = saveCustomUsername;
