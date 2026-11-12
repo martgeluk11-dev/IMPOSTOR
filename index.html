@@ -161,18 +161,6 @@ function playerListHTML(list){return list.map(p=>{const own=p.id===playerId;cons
 function renderLobby(){if(!isHost)return;const list=Object.values(players);$("roomCode").textContent=roomCode;renderLobbySettings({visibility:serverVisibility,maxPlayers:serverMaxPlayers,totalRounds:serverRounds});$("playersCount").textContent=list.length+" / "+serverMaxPlayers+" joined";$("lobbyPlayers").innerHTML=playerListHTML(list);$("startBtn").disabled=list.length<3||list.length>serverMaxPlayers;$("startBtn").textContent=list.length<3?"Need at least 3 players…": "Start game ("+list.length+")"}
 function renderLobbySettings(state={}){const visibility=state.visibility||serverVisibility;const max=state.maxPlayers||serverMaxPlayers;const rounds=state.totalRounds||serverRounds;$("lobbySettings").innerHTML="<span>"+(visibility==="private"?"🔒 PRIVATE ROOM":"🌐 PUBLIC ROOM")+"</span><span>👥 UP TO "+max+" PLAYERS</span><span>🎯 "+rounds+" ROUNDS</span>";}
 function showSecret(){if(!privateInfo)return;const card=$("secretCard");card.classList.toggle("impostor",privateInfo.role==="impostor");$("secretLabel").textContent=privateInfo.role==="impostor"?"YOU ARE THE IMPOSTOR · CATEGORY":"YOUR SECRET WORD · CATEGORY: "+privateInfo.category.toUpperCase();$("secretWord").textContent=privateInfo.role==="impostor"?privateInfo.category:privateInfo.word}
-function renderHints(state){
- const arr=[];
- for(const [id,hints] of Object.entries(state.hints||{})){
-  const p=state.players.find(x=>x.id===id);
-  hints.forEach(h=>arr.push({id,name:p?.name||"Player",round:h.round,text:h.text}));
- }
- arr.sort((a,b)=>a.round-b.round);
- $("hintList").innerHTML=arr.map(h=>{
-  const key=h.id+":"+h.round,fresh=!hintSeenKeys.has(key);hintSeenKeys.add(key);
-  return '<div class="chalk-hint '+(fresh?"chalk-hint-new":"")+'"><span class="chalk-hint-round">R'+h.round+'</span><span class="chalk-hint-name">'+esc(h.name)+'</span><span class="chalk-hint-text">'+esc(h.text)+'</span></div>';
- }).join("");
-}
 function renderGame(){if(!game)return;const state=publicState(playerId);if(!state)return;renderGameFromState(state,privateInfo)}
 function latestVisibleHint(state,roster,turnIndex){
  const round=Number(state.round)||1;
