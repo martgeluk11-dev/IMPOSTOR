@@ -64,6 +64,28 @@
   let accountUser = null;
   let modalSubmit = null;
   const avatarPath = id => "assets/pfps/pfp-" + String(id).padStart(2,"0") + ".webp";
+  async function claimUsername(candidate) {
+    const result=await rpc("impostor_claim_username",{p_username:candidate});
+    return result?.ok ? (result.username||candidate) : null;
+  }
+  async function ensurePlayerUsername() {
+    if(!accountUser)return;
+    const signedIn=!accountUser.is_anonymous;
+    const current=signedIn?String(accountUser.user_metadata?.display_name||"").trim():guestName;
+    if(current){
+      const claimed=await claimUsername(current);
+      if(claimed){if(!signedIn){guestName=claimed;localStorage.setItem("impostor_guest_name",claimed);}return;}
+    }
+    for(let i=0;i<30;i++){
+      const candidate=randomGuestName();
+      const claimed=await claimUsername(candidate);
+      if(!claimed)continue;
+      if(signedIn){const {data,error}=await db.auth.updateUser({data:{display_name:claimed}});if(error)throw error;accountUser=data.user;}
+      else{guestName=claimed;localStorage.setItem("impostor_guest_name",claimed);}
+      return;
+    }
+    throw new Error("Could not generate an available username. Please try again.");
+  }
   function selectedAvatar() {
     const saved = Number(accountUser?.user_metadata?.avatar_id);
     return Number.isInteger(saved) && saved >= 1 && saved <= 8 ? saved : guestAvatar;
@@ -123,16 +145,17 @@
         $("profileModalAvatar").src=avatarPath(id);displayProfile();
       } catch(e){$("profileModalError").textContent=e.message||"Could not update avatar.";}
     });
-    if($("profileModalReroll")) $("profileModalReroll").onclick=()=>{
-      guestName=randomGuestName();localStorage.setItem("impostor_guest_name",guestName);
-      $("profileModalName").textContent=guestName;displayProfile();
+    if($("profileModalReroll")) $("profileModalReroll").onclick=async()=>{
+      const button=$("profileModalReroll"),error=$("profileModalError");button.disabled=true;error.textContent="";
+      try{for(let i=0;i<30;i++){const candidate=randomGuestName(),claimed=await claimUsername(candidate);if(claimed){guestName=claimed;localStorage.setItem("impostor_guest_name",guestName);$("profileModalName").textContent=guestName;displayProfile();return;}}throw new Error("Could not find an available username. Try again.");}
+      catch(e){error.textContent=e.message||"Could not change username.";}finally{button.disabled=false;}
     };
     if($("profileModalSave")) $("profileModalSave").onclick=async()=>{
       const input=$("profileModalUsername"),value=input.value.trim(),error=$("profileModalError"),button=$("profileModalSave");
       if(!accountUser||accountUser.is_anonymous){error.textContent="Log in to set a custom username.";return;}
       if(value.length<3||value.length>16||!/^[a-zA-Z0-9_ ]+$/.test(value)){error.textContent="Use 3–16 letters, numbers, spaces or _.";return;}
       button.disabled=true;error.textContent="";
-      try{const {data,error:e}=await db.auth.updateUser({data:{display_name:value}});if(e)throw e;accountUser=data.user;name=value;displayProfile();$("profileModalName").textContent=value;error.textContent="Username saved!";}
+      try{const claimed=await claimUsername(value);if(!claimed)throw new Error("That username is already taken. Try another one.");const {data,error:e}=await db.auth.updateUser({data:{display_name:claimed}});if(e)throw e;accountUser=data.user;name=claimed;displayProfile();$("profileModalName").textContent=claimed;error.textContent="Username saved!";}
       catch(e){error.textContent=e.message||"Could not save username.";}
       finally{button.disabled=false;}
     };
@@ -187,7 +210,9 @@
     button.disabled=true;
     try {
       if(accountUser && !accountUser.is_anonymous){
-        const {data,error:saveError}=await db.auth.updateUser({data:{display_name:value}});
+        const claimed=await claimUsername(value);
+        if(!claimed)throw new Error("That username is already taken. Try another one.");
+        const {data,error:saveError}=await db.auth.updateUser({data:{display_name:claimed}});
         if(saveError)throw saveError;
         accountUser=data.user;
       } else {
@@ -262,7 +287,9 @@
     const buttons=$("modalActions").querySelectorAll("button");buttons.forEach(b=>b.disabled=true);
     try {
       if(mode==="signup"){
-        const {data,error}=await db.auth.updateUser({email,password,data:{display_name:username}});
+        const claimed=await claimUsername(username);
+        if(!claimed)throw new Error("That username is already taken. Please choose another one.");
+        const {data,error}=await db.auth.updateUser({email,password,data:{display_name:claimed}});
         if(error)throw error;
         accountUser=data.user; displayProfile();
         modalError("Account details saved. Check your email if confirmation is required, then sign in with these details.");
@@ -276,7 +303,9 @@
         if(error)throw error;
         accountUser=data.user;
         if(username){
-          const {error:metaError}=await db.auth.updateUser({data:{display_name:username}});
+          const claimed=await claimUsername(username);
+          if(!claimed)throw new Error("That username is already taken. Please choose another one.");
+          const {error:metaError}=await db.auth.updateUser({data:{display_name:claimed}});
           if(metaError)throw metaError;
         }
         accountUser=(await db.auth.getUser()).data.user;
@@ -288,7 +317,7 @@
   async function ensureAuth() {
     const { data: { session }, error: sessionError } = await db.auth.getSession();
     if (sessionError) throw sessionError;
-    if (session) { accountUser=session.user; return session.user; }
+    if (session) { accountUser=session.user; await ensurePlayerUsername(); return accountUser; }
     const { data, error } = await db.auth.signInAnonymously();
     if (error) throw new Error("Anonymous sign-in is disabled in Supabase. Enable it under Authentication → Sign In / Providers → Anonymous.");
     accountUser=data.user;
@@ -297,6 +326,7 @@
       const updated=await db.auth.updateUser({data:{avatar_id:avatar}});
       if(!updated.error)accountUser=updated.data.user;
     }
+    await ensurePlayerUsername();
     return accountUser;
   }
 
@@ -649,7 +679,7 @@
   }
 
   $("quickMatchBtn").onclick = quickMatch;
-  const rerollGuestName = () => { guestName=randomGuestName(); localStorage.setItem("impostor_guest_name",guestName); displayProfile(); };
+  const rerollGuestName = async () => { const button=$("rerollNameBtn");if(button)button.disabled=true;try{for(let i=0;i<30;i++){const candidate=randomGuestName(),claimed=await claimUsername(candidate);if(claimed){guestName=claimed;localStorage.setItem("impostor_guest_name",guestName);displayProfile();return;}}throw new Error("Could not find an available username. Try again.");}catch(e){if($("usernameError"))$("usernameError").textContent=e.message||"Could not change username.";}finally{if(button)button.disabled=false;} };
   $("rerollNameBtn").onclick = rerollGuestName;
   if($("customizeRerollBtn")) $("customizeRerollBtn").onclick = rerollGuestName;
   $("customizeAvatarBtn").onclick = openProfileCustomize;
