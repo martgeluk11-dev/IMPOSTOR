@@ -1550,6 +1550,7 @@ body{background-size:cover!important;background-position:center center!important
 }
 
 
+@media(min-width:761px){
 /* Shared customize page: available from the profile on desktop and mobile */
 #customize.active{display:block;max-width:680px;margin:0 auto;padding-bottom:30px}
 #customize .customize-heading{padding:22px 0 18px}
@@ -1573,3 +1574,5 @@ body{background-size:cover!important;background-position:center center!important
 #customizeAccountText{margin:0 0 12px}
 #customize .customize-account-actions{display:flex;gap:10px;flex-wrap:wrap}
 #customize .customize-account-button.secondary{background:#ffffff12;color:#fff;border:1px solid rgba(255,255,255,.2)}
+
+}
