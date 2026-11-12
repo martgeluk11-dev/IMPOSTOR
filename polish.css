@@ -315,3 +315,41 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 @media(prefers-reduced-motion:reduce){
  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+/* Final cascade guard: the previous stylesheet had legacy !important rules. */
+@media(min-width:721px){
+ #home.active{display:grid!important;grid-template-columns:minmax(220px,265px) minmax(0,1fr)!important;grid-template-rows:auto auto minmax(0,1fr)!important;column-gap:clamp(30px,5vw,72px)!important;row-gap:12px!important;align-items:center!important;justify-content:center!important;padding:48px 18px 38px!important}
+ #home>.home-xp{grid-column:1!important;grid-row:1!important;position:relative!important;inset:auto!important;justify-self:start!important;width:220px!important;height:58px!important;margin:0!important}
+ #home>.home-coins{grid-column:1!important;grid-row:2!important;position:relative!important;inset:auto!important;justify-self:start!important;width:170px!important;height:48px!important;margin:0!important}
+ #home>.home-profile-card{grid-column:1!important;grid-row:3!important;display:flex!important;position:relative!important;inset:auto!important;align-self:start!important;justify-self:stretch!important;width:100%!important;max-width:265px!important;margin:5px 0 0!important}
+ #home>.home-center{grid-column:2!important;grid-row:1/4!important;display:flex!important;position:relative!important;align-self:center!important;justify-self:center!important;width:100%!important;max-width:680px!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:24px!important;margin:0!important;padding:0!important}
+ #home .game-logo.game-logo-image{width:min(100%,560px)!important;max-width:560px!important;height:auto!important;min-height:0!important;aspect-ratio:760/310!important;margin:0 auto!important;padding:0!important}
+ #home .home-menu{display:grid!important;width:100%!important;max-width:540px!important;grid-template-columns:1fr!important;gap:9px!important;padding:14px!important;margin:0 auto!important;border:1px solid #ffffff22!important;border-radius:19px!important}
+ #home .menu-action{display:flex!important;align-items:center!important;justify-content:space-between!important;width:100%!important;min-height:62px!important;padding:0 17px!important;border:1px solid var(--line)!important;border-radius:12px!important;background:#ffffff06!important;box-shadow:none!important;font-size:17px!important;line-height:1.1!important;white-space:normal!important}
+ #home .menu-action.quick-action{background:linear-gradient(100deg,#9b7bf0,#7c63d5)!important;border-color:transparent!important}
+}
+#home .home-xp,#home .home-coins{border:1px solid var(--line)!important;outline:none!important;box-shadow:none!important;overflow:visible!important}
+#home .xp-star{left:8px!important;transform:translateY(-50%)!important;width:34px!important;height:34px!important;font-size:17px!important;clip-path:none!important;border-radius:10px!important;background:var(--accent)!important;color:#171123!important}
+#home .home-xp{padding-left:54px!important;background:#191625!important;color:var(--text)!important}
+#home .xp-track strong{font-size:11px!important;color:var(--text)!important}
+#home .xp-bar{background:#ffffff20!important}
+#home .xp-bar span{background:var(--gold)!important}
+#home .home-coins{padding:8px 13px!important;background:#201a29!important;color:var(--gold)!important}
+#home .coin-icon{position:static!important;transform:none!important;width:auto!important;height:auto!important;font-size:16px!important}
+#home .home-profile-card{border:1px solid #ffffff24!important;border-radius:20px!important;background:linear-gradient(155deg,#2a2240,#191625 76%)!important;box-shadow:var(--shadow)!important;color:var(--text)!important}
+#home .profile-avatar{border:2px solid var(--accent)!important;border-radius:22px!important;background:#302747!important;color:var(--gold)!important;box-shadow:none!important}
+#home .home-profile-card h2{color:var(--text)!important;font:700 22px 'Space Grotesk'!important}
+#home .home-profile-card p{color:var(--muted)!important}
+#home .profile-auth-button{border:1px solid var(--accent)!important;border-radius:10px!important;background:var(--accent)!important;color:#171123!important;box-shadow:none!important;font:800 12px 'DM Sans'!important}
+#home .profile-auth-button.secondary{background:transparent!important;color:var(--text)!important;border-color:var(--line)!important}
+#home .profile-customize-button{border:1px solid var(--line)!important;border-radius:10px!important;background:#ffffff0a!important;color:var(--text)!important;box-shadow:none!important;font:800 12px 'DM Sans'!important}
+@media(max-width:720px){
+ #home.active{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:16px!important;min-height:calc(100dvh - 60px)!important;padding:8px 0 14px!important;margin:0!important}
+ #home .home-xp,#home .home-coins,#home .home-profile-card{display:none!important}
+ #home .home-center{display:flex!important;flex:1 1 auto!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:clamp(14px,3vh,22px)!important;width:100%!important;max-width:470px!important;margin:auto!important}
+ #home .game-logo.game-logo-image{width:100%!important;max-width:100%!important;height:clamp(105px,19vh,150px)!important;aspect-ratio:auto!important;margin:0!important}
+ #home .home-menu{width:100%!important;max-width:470px!important;gap:7px!important;padding:11px!important;border:1px solid #ffffff22!important;border-radius:17px!important}
+ #home .menu-action{min-height:clamp(52px,8.5vh,65px)!important;padding:0 15px!important;border:1px solid var(--line)!important;border-radius:12px!important;box-shadow:none!important;font-size:16px!important;white-space:normal!important}
+ #home #customizePageBtn{display:flex!important}
+}
+@media(max-width:390px){#home .home-menu{padding:8px!important;gap:5px!important}#home .menu-action{min-height:50px!important}}
