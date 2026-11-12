@@ -1502,7 +1502,7 @@ body{background-size:cover!important;background-position:center center!important
 
 /* Dedicated mobile customize/account page */
 #home #customizePageBtn{display:none!important}
-@media(max-width:760px){
+@media(max-width:760px) and (hover:none) and (pointer:coarse){
  #home #customizePageBtn{display:grid!important}
  #home .home-menu .menu-action{min-height:clamp(49px,8.2vh,62px)}
  #customize.active{gap:0;max-width:560px;margin:0 auto!important}
