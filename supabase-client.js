@@ -602,7 +602,7 @@
   const rerollGuestName = () => { guestName=randomGuestName(); localStorage.setItem("impostor_guest_name",guestName); displayProfile(); };
   $("rerollNameBtn").onclick = rerollGuestName;
   if($("customizeRerollBtn")) $("customizeRerollBtn").onclick = rerollGuestName;
-  $("customizeAvatarBtn").onclick = customizeAvatar;
+  $("customizeAvatarBtn").onclick = () => { displayProfile(); setScreen("customize"); };
   $("customizePageBtn").onclick = () => { displayProfile(); setScreen("customize"); };
   $("customizeBackBtn").onclick = () => setScreen("home");
   $("saveUsernameBtn").onclick = saveCustomUsername;
