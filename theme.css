@@ -1576,3 +1576,26 @@ body{background-size:cover!important;background-position:center center!important
 #customize .customize-account-button.secondary{background:#ffffff12;color:#fff;border:1px solid rgba(255,255,255,.2)}
 
 }
+
+
+/* Profile customization popup */
+.profile-customize-modal{display:grid;gap:0;text-align:left}
+.profile-customize-identity{display:flex;align-items:center;gap:12px;padding:5px 0 16px}
+.profile-customize-identity>img{width:54px;height:54px;object-fit:cover;border-radius:50%;border:2px solid #ffd166}
+.profile-customize-identity>div{display:grid;gap:4px;min-width:0}
+.profile-customize-identity strong{font:700 18px 'Space Grotesk';overflow-wrap:anywhere}
+.profile-customize-identity span,.profile-modal-section p{font-size:11px;color:#c9c2d7;margin:0;line-height:1.45}
+.profile-modal-section{padding:13px 0;border-top:1px solid rgba(255,255,255,.13)}
+.profile-modal-section>label{display:block;color:#ffd166;font-size:10px;font-weight:800;letter-spacing:1.4px;margin-bottom:9px}
+.profile-customize-modal .avatar-picker{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}
+.profile-customize-modal .avatar-choice{min-width:0;aspect-ratio:1;border:2px solid transparent;border-radius:10px;background:#ffffff12;padding:3px;overflow:hidden}
+.profile-customize-modal .avatar-choice.selected{border-color:#ff668e;background:#ff668e22}
+.profile-customize-modal .avatar-choice img{width:100%;height:100%;object-fit:cover;border-radius:7px}
+.profile-modal-name-row{display:flex;gap:8px}
+.profile-modal-name-row input{flex:1;min-width:0;height:42px;border:1px solid #635b78;border-radius:9px;background:#211f2c;color:#fff;padding:0 11px;font-size:14px}
+.profile-customize-modal button:not(.avatar-choice){min-height:39px;padding:0 14px;border-radius:9px;background:#ff668e;color:#291722;font-size:10px;font-weight:800}
+.profile-customize-modal button.secondary{background:#ffffff12;color:#fff;border:1px solid rgba(255,255,255,.2)}
+.profile-modal-section>p{margin-top:7px}
+.profile-modal-error{min-height:16px;margin-top:6px;color:#ffd166;font-size:11px}
+.profile-modal-account{display:flex;gap:8px;margin-top:10px}
+@media(max-width:420px){.profile-customize-modal .avatar-picker{grid-template-columns:repeat(4,minmax(0,1fr))}}
