@@ -1651,3 +1651,14 @@ body{background-size:cover!important;background-position:center center!important
 }
 #lobby .players-heading strong{font-weight:800!important}
 #lobby .lobby-open-tag{font-weight:800!important;letter-spacing:.8px}
+
+/* Room code readability — keep the actual invite code bright on every screen size */
+#lobby #roomCode,
+#lobby .room-code{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  text-shadow:0 2px 5px rgba(0,0,0,.9),0 0 12px rgba(255,255,255,.2)!important;
+  background:rgba(12,8,25,.82)!important;
+  border-color:rgba(255,255,255,.72)!important;
+}
