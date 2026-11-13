@@ -250,7 +250,7 @@ function renderGameFromState(state,info){
   const fallback=1+(Array.from(String(p.id||p.name||"player")).reduce((n,ch)=>n+ch.charCodeAt(0),0)%8);
   const avatar=Number(p.avatar_id)>=1&&Number(p.avatar_id)<=8?Number(p.avatar_id):(p.id===playerId?(window.impostorAvatarId||Number(localStorage.getItem("impostor_guest_pfp"))||1):fallback);
   const active=p.id===state.turnPlayerId,own=p.id===playerId;
-  return '<div class="orbit-player '+(active?"is-current":"")+' '+(own?"is-you":"")+'" style="--angle:'+angle+'deg;--player-index:'+i+'" data-player-id="'+esc(p.id)+'">'+
+  return '<div class="orbit-player '+(active?"is-current":"")+' '+(own?"is-you":"")+'" style="--angle:'+angle+'deg;--player-index:'+i+';--player-delay:'+(i*55)+'ms" data-player-id="'+esc(p.id)+'">'+
    (active?'<div class="orbit-thinking" aria-label="Thinking"><span class="orbit-thinking-mark"><i>?</i><i>?</i><i>?</i></span></div>':'')+
    '<span class="orbit-status">'+(active?"✦":"")+'</span><img src="assets/pfps/pfp-'+String(avatar).padStart(2,"0")+'.webp" alt=""><strong>'+esc(p.name)+'</strong><small>'+(active?"GIVING HINT":own?"YOU":"PLAYER")+'</small></div>';
  }).join("");
