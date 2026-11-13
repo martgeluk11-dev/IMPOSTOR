@@ -246,7 +246,7 @@ function renderGameFromState(state,info){
  $("waiting").textContent=submitted?"Your hint is in. Waiting for the next player…":(current?"Waiting for "+current.name+" to write a hint…":"Waiting for the next turn.");
  $("taskDescription").textContent=myTurn?"Describe the secret word without saying it. You have 30 seconds.":(current?"It's "+current.name+"'s turn. Watch the board.":"Waiting for the next turn.");
  $("gamePlayers").innerHTML=roster.map((p,i)=>{
-  const angle=360/Math.max(roster.length,1)*(i-turnIndex)-90;
+  const angle=360/Math.max(roster.length,1)*(i-turnIndex);
   const fallback=1+(Array.from(String(p.id||p.name||"player")).reduce((n,ch)=>n+ch.charCodeAt(0),0)%8);
   const avatar=Number(p.avatar_id)>=1&&Number(p.avatar_id)<=8?Number(p.avatar_id):(p.id===playerId?(window.impostorAvatarId||Number(localStorage.getItem("impostor_guest_pfp"))||1):fallback);
   const active=p.id===state.turnPlayerId,own=p.id===playerId;
