@@ -1868,3 +1868,12 @@ body{background-size:cover!important;background-position:center center!important
  #game .hint-reveal-board.board-reveal,#game .game-action-panel,#game #submitHint:after{animation:none!important}
  #game .orbit-player{opacity:1!important}
 }
+
+
+/* Hint board stays visible and its lettering remains above the player orbit. */
+#game .game-stage{isolation:isolate}
+#game .player-orbit{z-index:3!important}
+#game .hint-reveal-board{z-index:4!important;pointer-events:none}
+#game .hint-reveal-word{position:absolute;left:14%;right:14%;top:36%;min-height:24%;display:grid;place-items:center;text-align:center;overflow-wrap:anywhere}
+#game .hint-reveal-board:not(.is-visible){opacity:1}
+#game .hint-reveal-board .hint-reveal-word{max-width:72%;margin:auto}
