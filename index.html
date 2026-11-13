@@ -13,7 +13,7 @@
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif}body{min-height:100dvh;background:radial-gradient(ellipse at 50% -20%,#38304e 0,transparent 52%),var(--bg)}button,input{font:inherit}button{cursor:pointer;border:0;color:inherit}.app{width:min(100%,1040px);margin:auto;padding:24px 22px 48px;min-height:100dvh}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:42px}.brand{font:700 23px 'Space Grotesk';letter-spacing:-1.4px}.brand span{color:var(--pink)}.pill{font-size:12px;color:var(--muted);background:#ffffff0b;border:1px solid var(--line);padding:8px 12px;border-radius:99px}.screen{display:none}.screen.active{display:block;animation:appear .25s ease}@keyframes appear{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}.hero{text-align:center;max-width:620px;margin:6vh auto 34px}.eyebrow{font-size:11px;letter-spacing:2.5px;font-weight:800;color:var(--pink);text-transform:uppercase}.hero h1{font:700 clamp(48px,10vw,82px)/.98 'Space Grotesk';letter-spacing:-5px;margin:16px 0}.hero h1 em{font-style:normal;color:var(--yellow)}.hero p{color:var(--muted);font-size:16px;line-height:1.65;margin:0 auto;max-width:440px}.panel{background:linear-gradient(145deg,#262332,#201e2a);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow)}.home-actions{width:min(100%,410px);margin:0 auto;display:grid;gap:12px}.btn{min-height:50px;padding:13px 18px;border-radius:13px;font-weight:800;transition:transform .15s,filter .15s}.btn:active{transform:scale(.98)}.btn.primary{background:var(--pink);color:#291722}.btn.secondary{background:#ffffff0c;border:1px solid var(--line)}.btn.ghost{background:transparent;color:var(--muted)}.btn:disabled{opacity:.4;cursor:not-allowed}.field{display:grid;gap:7px;margin:14px 0}.field label{font-size:12px;color:var(--muted);font-weight:700}.field input{width:100%;background:#17151f;border:1px solid var(--line);border-radius:12px;padding:14px;color:var(--text);outline:none}.field input:focus,.field select:focus{border-color:var(--purple)}.field select{width:100%;background:#17151f;border:1px solid var(--line);border-radius:12px;padding:14px;color:var(--text);outline:none}.visibility.active{border-color:var(--pink);background:#ff668e1c;color:var(--pink)}.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}.section-title{font:700 27px 'Space Grotesk';letter-spacing:-1px;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;line-height:1.5;margin:0 0 20px}.room-code{font:700 30px 'Space Grotesk';letter-spacing:5px;color:var(--yellow);text-align:center;background:#17151f;border:1px dashed #5b526c;border-radius:14px;padding:16px;margin:16px 0}.players{display:grid;gap:9px;margin:18px 0}.player{display:flex;align-items:center;gap:12px;background:#ffffff08;border:1px solid #ffffff0d;padding:11px 13px;border-radius:13px}.avatar{width:38px;height:38px;border-radius:12px;background:#3b3450;display:grid;place-items:center;font-size:19px;flex:none}.player-name{font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}.tag{font-size:11px;font-weight:800;padding:5px 8px;border-radius:99px;background:#ffffff10;color:var(--muted)}.tag.ready{background:#82e6c21c;color:var(--mint)}.tag.host{background:#a995ff22;color:var(--purple)}.game-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.round{font:700 14px 'Space Grotesk';color:var(--yellow)}.timer{font:700 26px 'Space Grotesk';font-variant-numeric:tabular-nums}.timer.low{color:var(--danger)}.progress{height:6px;background:#ffffff12;border-radius:9px;overflow:hidden;margin:10px 0 22px}.progress>div{height:100%;background:var(--pink);width:100%;transition:width .5s linear}.secret{padding:18px;border-radius:16px;background:linear-gradient(120deg,#342b48,#282338);border:1px solid #504365;margin-bottom:20px}.secret small{display:block;color:#c1b4dd;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}.secret strong{display:block;font:700 27px 'Space Grotesk';margin-top:5px}.secret.impostor{background:linear-gradient(120deg,#4a2939,#302331);border-color:#714052}.hint-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:18px 0}.hint-card{background:#ffffff09;border:1px solid var(--line);border-radius:14px;padding:13px}.hint-card .who{font-size:11px;color:var(--muted);font-weight:700}.hint-card .hint{font-weight:700;font-size:16px;margin-top:6px;overflow-wrap:anywhere}.hint-card.pending{opacity:.45;border-style:dashed}.notice{color:var(--muted);font-size:13px;text-align:center;padding:10px}.vote-list{display:grid;gap:9px;margin:18px 0}.vote-option{display:flex;align-items:center;gap:12px;padding:13px;background:#ffffff08;border:1px solid var(--line);border-radius:14px;text-align:left;width:100%;font-weight:700}.vote-option.selected{border-color:var(--pink);background:#ff668e18}.result{text-align:center;padding:24px 10px}.result .emoji{font-size:54px}.result h2{font:700 38px 'Space Grotesk';letter-spacing:-2px;margin:10px 0}.result p{color:var(--muted);line-height:1.6}.error{color:var(--danger);font-size:13px;min-height:18px;margin-top:8px}.footer{text-align:center;color:#777184;font-size:11px;margin:30px 0 0}.small{font-size:12px;color:var(--muted)}.hidden{display:none!important}
 @media(max-width:600px){.app{padding:17px 14px 32px}.top{margin-bottom:28px}.hero{margin:4vh auto 26px}.hero h1{letter-spacing:-3px}.panel{padding:19px;border-radius:18px}.section-title{font-size:24px}.row{flex-direction:column}.room-code{font-size:26px}.game-head{align-items:flex-start}.hint-list{grid-template-columns:1fr 1fr}.btn{min-height:52px}.secret strong{font-size:24px}}
 </style>
-<link rel="stylesheet" href="theme.css?v=38">
+<link rel="stylesheet" href="theme.css?v=39">
 </head>
 <body><button id="menuMusicToggle" class="menu-music-toggle hidden" type="button" aria-label="Mute music" aria-pressed="false" title="Mute music"><span class="music-toggle-icon" aria-hidden="true">♫</span><span class="music-toggle-state">SOUND ON</span></button><main class="app">
 <header class="top"><div class="top-right"><div class="profile-stats" id="profileStats"><span>🪙 0</span><span>LVL 1</span></div></div></header>
@@ -197,37 +197,23 @@ function updateHostView(){if(isHost){renderHost()}else sendClient({type:"request
 function playerListHTML(list){return list.map(p=>{const own=p.id===playerId;const fallback=1+(Array.from(String(p.id||p.name||"player")).reduce((n,ch)=>n+ch.charCodeAt(0),0)%8);const avatar=Number(p.avatar_id)>=1&&Number(p.avatar_id)<=8?Number(p.avatar_id):(own?(window.impostorAvatarId||Number(localStorage.getItem("impostor_guest_pfp"))||1):fallback);return '<div class="player player-profile-card"><img class="player-profile-picture" src="assets/pfps/pfp-'+String(avatar).padStart(2,"0")+'.webp" alt=""><div class="player-name">'+esc(p.name)+'</div></div>'}).join("")}
 function renderLobby(){if(!isHost)return;const list=Object.values(players);$("roomCode").textContent=roomCode;renderLobbySettings({visibility:serverVisibility,maxPlayers:serverMaxPlayers,totalRounds:serverRounds});$("playersCount").textContent=list.length+" / "+serverMaxPlayers+" joined";$("lobbyPlayers").innerHTML=playerListHTML(list);$("startBtn").disabled=list.length<3||list.length>serverMaxPlayers;$("startBtn").textContent=list.length<3?"Need at least 3 players…": "Start game ("+list.length+")"}
 function renderLobbySettings(state={}){const visibility=state.visibility||serverVisibility;const max=state.maxPlayers||serverMaxPlayers;const rounds=state.totalRounds||serverRounds;$("lobbySettings").innerHTML="<span>"+(visibility==="private"?"🔒 PRIVATE ROOM":"🌐 PUBLIC ROOM")+"</span><span>👥 UP TO "+max+" PLAYERS</span><span>🎯 "+rounds+" ROUNDS</span>";}
-function showSecret(){if(!privateInfo)return;const card=$("secretCard");card.classList.toggle("impostor",privateInfo.role==="impostor");$("secretLabel").textContent=privateInfo.role==="impostor"?"YOU ARE THE IMPOSTOR · CATEGORY":"YOUR SECRET WORD · CATEGORY: "+privateInfo.category.toUpperCase();$("secretWord").textContent=privateInfo.role==="impostor"?privateInfo.category:privateInfo.word}
+function showSecret(){if(!privateInfo)return;const impostor=privateInfo.role==="impostor";const card=$("secretCard");card.classList.toggle("impostor",impostor);$("secretLabel").textContent=impostor?"YOUR ROLE":"YOUR SECRET WORD · CATEGORY: "+String(privateInfo.category||"").toUpperCase();$("secretWord").textContent=impostor?"IMPOSTOR":(privateInfo.word||"—")}
 function renderGame(){if(!game)return;const state=publicState(playerId);if(!state)return;renderGameFromState(state,privateInfo)}
 function latestVisibleHint(state,roster,turnIndex){
- const currentRound=Number(state.round)||1;
- const findHint=(player,roundNo)=>{
-  if(!player)return null;
-  const list=state.hints?.[String(player.id)]||[];
-  if(!Array.isArray(list))return null;
-  const found=list.find(h=>Number(h?.round)===roundNo);
-  const value=typeof found?.text==="string"?found.text.trim():String(found?.text??"").trim();
-  return value&&value!=="(skipped)"?{id:String(player.id),round:roundNo,text:value}:null;
- };
- // The active turn index points at the next player, so the previous roster
- // entries are the hints already written in this round.
- for(let i=Math.min(Math.max(0,Number(turnIndex)||0),roster.length)-1;i>=0;i--){
-  const hint=findHint(roster[i],currentRound);
-  if(hint)return hint;
- }
- // At the start of a new round, keep the previous round's final hint visible.
- for(let roundNo=currentRound-1;roundNo>=1;roundNo--){
-  for(let i=roster.length-1;i>=0;i--){
-   const hint=findHint(roster[i],roundNo);
-   if(hint)return hint;
+ const hints=state?.hints||{};
+ const rank=new Map(roster.map((p,i)=>[String(p.id),i]));
+ const found=[];
+ for(const [id,entries] of Object.entries(hints)){
+  if(!Array.isArray(entries))continue;
+  for(const entry of entries){
+   const text=typeof entry==="string"?entry:String(entry?.text??"");
+   const round=Number(entry?.round)||0;
+   const clean=text.trim();
+   if(clean&&clean!=="(skipped)")found.push({id:String(id),round,text:clean,playerIndex:rank.get(String(id))??-1});
   }
  }
- // Fallback for snapshots where turnIndex is briefly out of sync with hints.
- for(let i=roster.length-1;i>=0;i--){
-  const hint=findHint(roster[i],currentRound);
-  if(hint)return hint;
- }
- return null;
+ found.sort((a,b)=>b.round-a.round||b.playerIndex-a.playerIndex);
+ return found[0]||null;
 }
 function renderGameFromState(state,info){
  privateInfo=info||privateInfo;showSecret();
@@ -256,23 +242,17 @@ function renderGameFromState(state,info){
  }).join("");
  const latest=latestVisibleHint(state,roster,turnIndex);
  const board=$("hintRevealBoard"),word=$("hintRevealWord");
- if(latest){
-  const key=latest.id+":"+latest.round+":"+latest.text;
-  if(word.textContent!==latest.text)word.textContent=latest.text;
-  board.classList.remove("hidden");
-  board.style.display="block";
-  if(key!==lastBoardHintKey){
-   board.classList.remove("is-visible","board-reveal");
-   void board.offsetWidth;
-   board.classList.add("is-visible","board-reveal");
-   lastBoardHintKey=key;
-  }else board.classList.add("is-visible");
- }else{
-  board.classList.add("hidden");
+ const key=latest?latest.id+":"+latest.round+":"+latest.text:"waiting";
+ const displayText=latest?latest.text:"WAITING FOR FIRST HINT";
+ if(word.textContent!==displayText)word.textContent=displayText;
+ board.classList.remove("hidden");
+ board.style.display="block";
+ if(key!==lastBoardHintKey){
   board.classList.remove("is-visible","board-reveal");
-  board.style.display="none";
-  lastBoardHintKey="";
- }
+  void board.offsetWidth;
+  board.classList.add("is-visible","board-reveal");
+  lastBoardHintKey=key;
+ }else board.classList.add("is-visible");
  if(!myTurn)$("hintInput").value="";
 }
 function updateTimer(deadline){clearInterval(hostTimer);const tick=()=>{const n=Math.max(0,Math.ceil((deadline-Date.now())/1000));remaining=n;$("timer").textContent=String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");$("timer").classList.toggle("low",n<=10);$("timerBar").style.width=(n/30*100)+"%";if(n===0){clearInterval(hostTimer);if(isHost)advanceIfTimedOut()}};tick();hostTimer=setInterval(tick,250)}
