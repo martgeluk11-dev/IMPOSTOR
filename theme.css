@@ -1877,3 +1877,25 @@ body{background-size:cover!important;background-position:center center!important
 #game .hint-reveal-word{position:absolute;left:14%;right:14%;top:36%;min-height:24%;display:grid;place-items:center;text-align:center;overflow-wrap:anywhere}
 #game .hint-reveal-board:not(.is-visible){opacity:1}
 #game .hint-reveal-board .hint-reveal-word{max-width:72%;margin:auto}
+
+
+/* Fix game layering: the chalkboard and its hint text must render above every avatar. */
+#game .game-stage{position:relative!important;isolation:isolate!important}
+#game .player-orbit{z-index:1!important;pointer-events:none!important}
+#game .orbit-player{z-index:1!important}
+#game .hint-reveal-board{
+  position:absolute!important;
+  z-index:20!important;
+  isolation:isolate!important;
+  pointer-events:none!important;
+}
+#game .hint-reveal-board .chalkboard-image{position:relative!important;z-index:1!important}
+#game .hint-reveal-board .hint-reveal-word{
+  position:absolute!important;
+  z-index:5!important;
+  left:14%!important;right:14%!important;
+  top:30%!important;bottom:22%!important;
+  display:grid!important;place-items:center!important;
+  text-align:center!important;
+}
+#game .hint-reveal-board .chalk-spark{z-index:6!important}
