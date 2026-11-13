@@ -1693,3 +1693,91 @@ body{background-size:cover!important;background-position:center center!important
  .screen.active{max-height:calc(100dvh - 112px);overflow:hidden}
  #home.active{min-height:0;max-height:calc(100dvh - 112px)}
 }
+
+
+/* IMPOSTOR polish pass: stable orbit, visible board reveal and compact desktop fit. */
+#game .player-orbit{transform:rotate(0deg);transform-origin:50% 50%}
+#game .orbit-player{
+ --orbit-radius:clamp(170px,24vh,230px);
+ transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)))!important;
+ will-change:transform,filter;
+}
+#game .orbit-player.is-current{animation:orbitPlayerBob 1.9s ease-in-out infinite!important}
+@keyframes orbitPlayerBob{
+ 0%,100%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)))}
+ 50%{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius) - 5px)) rotate(calc(-1 * var(--angle)))}
+}
+#game .orbit-thinking-mark{display:flex;align-items:center;justify-content:center;gap:1px;min-width:30px;height:27px}
+#game .orbit-thinking-mark i{display:inline-block;font:800 22px/.9 'Fredoka',sans-serif;color:#e64e9c;font-style:normal;text-shadow:0 1px 0 #fff;opacity:.25;transform:translateY(3px) scale(.72);animation:questionBounce .95s ease-in-out infinite}
+#game .orbit-thinking-mark i:nth-child(2){animation-delay:.14s}
+#game .orbit-thinking-mark i:nth-child(3){animation-delay:.28s}
+@keyframes questionBounce{
+ 0%,65%,100%{opacity:.25;transform:translateY(3px) scale(.72)}
+ 25%,45%{opacity:1;transform:translateY(-3px) scale(1.12)}
+}
+#game .hint-reveal-board:not(.hidden){display:block!important}
+#game .hint-reveal-board{
+ background:linear-gradient(145deg,#5c3a27,#2d1b18 48%,#68452b);
+ border:clamp(5px,.8vw,10px) solid #9b6538;
+ border-radius:10px;
+ box-shadow:inset 0 0 0 2px #d6a36a66,0 15px 32px #08041299;
+}
+#game .hint-reveal-board .chalkboard-image{position:relative;z-index:0}
+#game .hint-reveal-word{z-index:1}
+#game .hint-reveal-board.board-reveal{animation:chalkboardLift .82s cubic-bezier(.16,1,.3,1) both}
+@keyframes chalkboardLift{
+ 0%{opacity:0;visibility:visible;transform:translate(-50%,-34%) scale(.62) rotate(-4deg);filter:blur(8px) drop-shadow(0 18px 24px #10071f00)}
+ 55%{opacity:1;transform:translate(-50%,-54%) scale(1.06) rotate(1.2deg);filter:blur(0) drop-shadow(0 18px 24px #10071fa8)}
+ 78%{transform:translate(-50%,-48%) scale(.985) rotate(-.4deg)}
+ 100%{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1) rotate(0);filter:drop-shadow(0 18px 24px #10071fa8)}
+}
+#game .hint-reveal-board.board-reveal .hint-reveal-word{animation:chalkWordWrite .78s .12s cubic-bezier(.2,.8,.2,1) both}
+#game .orbit-player.is-current{z-index:5;filter:drop-shadow(0 0 10px #ffd16688)}
+#game .orbit-player:not(.is-current){transition:transform .75s cubic-bezier(.2,.82,.18,1),filter .35s,box-shadow .35s}
+@media(min-width:721px){
+ html,body{height:100%;min-height:0;overflow:hidden!important}
+ body{height:100dvh;min-height:0;overscroll-behavior:none}
+ .app{height:100dvh;min-height:0;overflow:hidden;padding:14px 28px 16px}
+ .top{height:34px;min-height:34px;margin:0 0 8px;padding:0;border:0}
+ .screen.active{height:calc(100dvh - 76px);max-height:calc(100dvh - 76px);min-height:0;overflow:hidden}
+ #home.active{height:calc(100dvh - 76px);min-height:0;max-height:none;padding:18px 4% 20px}
+ #game.active{display:flex;flex-direction:column;min-height:0}
+ #game .game-topline{flex:none;margin-bottom:5px}
+ #game .game-progress{flex:none;margin:0 0 7px}
+ #game .secret{flex:none;margin-bottom:3px;padding:6px 14px}
+ #game .game-stage{height:auto;min-height:190px;max-height: min(42vh,390px);flex:1 1 250px;width:min(100%,760px);margin:0 auto 5px}
+ #game .chalkboard-wrap{width:min(42%,320px)}
+ #game .orbit-player{--orbit-radius:clamp(145px,22vh,205px);width:clamp(76px,8vw,106px);min-height:94px}
+ #game .orbit-player img{width:clamp(38px,4.5vw,54px);height:clamp(38px,4.5vw,54px)}
+ #game .game-action-panel{flex:none;width:min(100%,560px);padding:11px 18px 13px;border-radius:17px}
+ #game .action-kicker{font-size:8px}
+ #game .game-action-panel .section-title{font-size:21px;margin:3px 0}
+ #game .game-action-panel .sub{font-size:11px;margin:0 0 7px}
+ #game .game-action-panel .field{margin:0 0 7px}
+ #game .game-action-panel .field input{height:42px}
+ #game #submitHint{min-height:42px}
+ #game #waiting{padding:7px;margin:0}
+ .footer{display:none}
+}
+@media(max-width:760px){
+ #game .orbit-player{--orbit-radius:clamp(155px,30vw,215px)}
+ #game .game-stage{overflow:visible}
+}
+@media(max-width:600px){
+ #game .orbit-player{--orbit-radius:clamp(130px,36vw,155px)}
+ #game .orbit-player.is-current{animation:orbitPlayerBob 1.9s ease-in-out infinite!important}
+ #game .hint-reveal-board{width:48%}
+}
+@media(max-height:760px) and (min-width:721px){
+ .app{padding-top:8px;padding-bottom:8px}
+ .top{height:24px;min-height:24px;margin-bottom:4px}
+ .screen.active{height:calc(100dvh - 48px);max-height:calc(100dvh - 48px)}
+ #home.active{height:calc(100dvh - 48px);padding-top:8px;padding-bottom:8px}
+ #game .game-stage{max-height: min(37vh,280px);min-height:150px}
+ #game .game-action-panel{padding:7px 14px}
+ #game .game-action-panel .section-title{font-size:18px}
+ #game .game-action-panel .sub{margin-bottom:4px}
+}
+@media(prefers-reduced-motion:reduce){
+ #game .orbit-thinking-mark i,#game .orbit-player.is-current,#game .hint-reveal-board.board-reveal{animation:none!important}
+}
