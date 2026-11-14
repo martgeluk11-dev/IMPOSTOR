@@ -1899,3 +1899,7 @@ body{background-size:cover!important;background-position:center center!important
   text-align:center!important;
 }
 #game .hint-reveal-board .chalk-spark{z-index:6!important}
+
+
+/* Keep the secret/category banner above the orbiting top player's card. */
+#game .secret{position:relative!important;z-index:30!important}
