@@ -7,14 +7,20 @@
   "scope": "./",
   "display": "fullscreen",
   "orientation": "portrait",
-  "background_color": "#17151f",
-  "theme_color": "#17151f",
+  "background_color": "#8e8e93",
+  "theme_color": "#8e8e93",
   "icons": [
     {
       "src": "impostor-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
