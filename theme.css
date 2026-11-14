@@ -1903,3 +1903,12 @@ body{background-size:cover!important;background-position:center center!important
 
 /* Keep the secret/category banner above the orbiting top player's card. */
 #game .secret{position:relative!important;z-index:30!important}
+
+
+/* Lower the entire player orbit so the top avatar clears the category banner. */
+#game .player-orbit{
+  translate:0 clamp(38px,7vh,72px)!important;
+}
+@media(max-width:720px){
+  #game .player-orbit{translate:0 clamp(28px,5vh,48px)!important}
+}
